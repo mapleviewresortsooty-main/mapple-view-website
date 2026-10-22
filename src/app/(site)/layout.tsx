@@ -1,19 +1,20 @@
-import { getSettings } from "@/lib/settings";
-import { SiteHeader } from "@/components/site-header";
-import { SiteFooter } from "@/components/site-footer";
+import type { ReactNode } from "react";
+import Navbar from "@/components/site/Navbar";
+import Footer from "@/components/site/Footer";
 
-export default function SiteLayout({ children }: { children: React.ReactNode }) {
-  const settings = getSettings();
+// Data (settings, rooms, bookings) now comes from Neon over the network, so
+// nothing under this layout should be statically prerendered at build time —
+// that would require live DB access during `next build`/`opennextjs-cloudflare
+// build`. Everything renders per-request instead, same as the admin panel
+// (which is already dynamic because it reads cookies()).
+export const dynamic = "force-dynamic";
+
+export default function SiteLayout({ children }: { children: ReactNode }) {
   return (
     <>
-      <SiteHeader hotelName={settings.hotel_name} />
+      <Navbar />
       <main className="flex-1">{children}</main>
-      <SiteFooter
-        hotelName={settings.hotel_name}
-        address={settings.address}
-        contactEmail={settings.contact_email}
-        ownerPhone={settings.owner_phone}
-      />
+      <Footer />
     </>
   );
 }

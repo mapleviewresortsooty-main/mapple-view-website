@@ -1,44 +1,118 @@
 @import "tailwindcss";
 
-:root {
-  --color-cream: #faf5ec;
-  --color-cream-dim: #f1e9d8;
-  --color-ink: #221d16;
-  --color-ink-soft: #524a3d;
-  --color-forest: #1f3d31;
-  --color-forest-dark: #142822;
-  --color-moss: #4c6b52;
-  --color-terracotta: #c1653d;
-  --color-terracotta-dark: #a34f2c;
-  --color-gold: #c99a3e;
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
 
-  --background: var(--color-cream);
-  --foreground: var(--color-ink);
+/* Editorial mountain-estate palette (warm ivory surface, deep forest primary,
+   heritage tan/brown secondary) — reframed from a Stitch design reference
+   the user supplied. Token NAMES are kept the same as before (stone, ink,
+   line, petrol-*, charcoal) so every existing component across the site and
+   admin panel picks up the new palette automatically through this one file. */
+:root {
+  --color-stone: #fbf9f6;
+  --color-stone-dark: #eae8e5;
+  --color-ink: #1b1c1a;
+  --color-ink-soft: #454b46;
+  --color-line: #dcd6c9;
+  --color-petrol-50: #f8f1e6;
+  --color-petrol-100: #efdfc4;
+  --color-petrol-300: #b68f61;
+  --color-petrol-400: #8f6a45;
+  --color-petrol-500: #76593f;
+  --color-petrol-600: #5c4129;
+  --color-charcoal: #071a11;
+  --color-charcoal-light: #132a1d;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-cream: var(--color-cream);
-  --color-cream-dim: var(--color-cream-dim);
+  --color-stone: var(--color-stone);
+  --color-stone-dark: var(--color-stone-dark);
   --color-ink: var(--color-ink);
   --color-ink-soft: var(--color-ink-soft);
-  --color-forest: var(--color-forest);
-  --color-forest-dark: var(--color-forest-dark);
-  --color-moss: var(--color-moss);
-  --color-terracotta: var(--color-terracotta);
-  --color-terracotta-dark: var(--color-terracotta-dark);
-  --color-gold: var(--color-gold);
-  --font-sans: var(--font-inter);
+  --color-line: var(--color-line);
+  --color-petrol-50: var(--color-petrol-50);
+  --color-petrol-100: var(--color-petrol-100);
+  --color-petrol-300: var(--color-petrol-300);
+  --color-petrol-400: var(--color-petrol-400);
+  --color-petrol-500: var(--color-petrol-500);
+  --color-petrol-600: var(--color-petrol-600);
+  --color-charcoal: var(--color-charcoal);
+  --color-charcoal-light: var(--color-charcoal-light);
   --font-display: var(--font-fraunces);
+  --font-sans: var(--font-source-sans);
+  --font-mono: var(--font-plex-mono);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  position: relative;
+  background: var(--color-stone);
+  color: var(--color-ink);
 }
 
-::selection {
-  background: var(--color-terracotta);
-  color: var(--color-cream);
+/* Small-caps overline label used throughout for "SECTION 0X // NAME" style
+   eyebrows above headings — the recurring editorial signature of the new
+   design reference. */
+.label-caps {
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+/* A faint film-grain overlay for tactile warmth instead of flat color
+   fields. Kept low-opacity so it never competes with content or hurts
+   contrast on either light or dark sections. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  pointer-events: none;
+  opacity: 0.035;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.font-display {
+  font-family: var(--font-display), Georgia, serif;
+}
+
+.font-mono-data {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Self-hosted so icons never flash as raw names (calendar_today, etc.)
+   when Google Fonts is slow or blocked. */
+@font-face {
+  font-family: "Material Symbols Outlined";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/material-symbols-outlined.woff2") format("woff2");
+}
+
+.material-symbols-outlined {
+  font-family: "Material Symbols Outlined", sans-serif;
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: "liga";
+  -webkit-font-feature-settings: "liga";
+  font-variation-settings:
+    "FILL" 0,
+    "wght" 400,
+    "GRAD" 0,
+    "opsz" 24;
 }

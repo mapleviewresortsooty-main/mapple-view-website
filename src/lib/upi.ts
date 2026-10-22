@@ -1,16 +1,31 @@
-export function buildUpiPaymentLink(params: {
-  payeeUpiId: string;
+import QRCode from "qrcode";
+
+export function buildUpiUri(params: {
+  upiId: string;
   payeeName: string;
   amount: number;
-  transactionNote: string;
-}): string {
-  const { payeeUpiId, payeeName, amount, transactionNote } = params;
-  const query = new URLSearchParams({
-    pa: payeeUpiId,
-    pn: payeeName,
-    am: amount.toFixed(2),
+  note: string;
+}) {
+  const search = new URLSearchParams({
+    pa: params.upiId,
+    pn: params.payeeName || "Resort",
+    am: params.amount.toFixed(2),
     cu: "INR",
-    tn: transactionNote,
+    tn: params.note,
   });
-  return `upi://pay?${query.toString()}`;
+  return `upi://pay?${search.toString()}`;
+}
+
+export async function buildUpiQrDataUrl(params: {
+  upiId: string;
+  payeeName: string;
+  amount: number;
+  note: string;
+}) {
+  const uri = buildUpiUri(params);
+  return QRCode.toDataURL(uri, {
+    errorCorrectionLevel: "M",
+    margin: 1,
+    width: 320,
+  });
 }

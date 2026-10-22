@@ -1,57 +1,144 @@
 import { z } from "zod";
 
-export const BookingFormSchema = z
+export const createBookingSchema = z
   .object({
-    room_id: z.coerce.number().int().positive(),
-    guest_name: z.string().trim().min(2, "Enter your full name").max(120),
-    guest_phone: z
+    roomId: z.string().min(1),
+    guestName: z.string().trim().min(2, "Name is required"),
+    guestPhone: z
       .string()
       .trim()
-      .regex(/^[0-9+\s-]{7,20}$/, "Enter a valid phone number"),
-    guest_email: z.union([z.literal(""), z.string().trim().email("Enter a valid email")]),
-    check_in: z.string().trim().min(1, "Select a check-in date"),
-    check_out: z.string().trim().min(1, "Select a check-out date"),
-    guests_count: z.coerce.number().int().min(1, "At least 1 guest").max(20),
-    notes: z.string().trim().max(500).optional().default(""),
+      .min(7, "A valid phone number is required")
+      .max(20),
+    guestEmail: z
+      .union([z.string().trim().email(), z.literal("")])
+      .optional()
+      .default(""),
+    checkIn: z.string().min(1, "Check-in date is required"),
+    checkOut: z.string().min(1, "Check-out date is required"),
+    guests: z.coerce.number().int().min(1).max(20),
+    notes: z.string().trim().max(1000).optional().default(""),
   })
-  .refine((data) => new Date(data.check_out) > new Date(data.check_in), {
+  .refine((data) => new Date(data.checkOut) > new Date(data.checkIn), {
     message: "Check-out must be after check-in",
-    path: ["check_out"],
+    path: ["checkOut"],
   });
 
-export const LoginFormSchema = z.object({
-  username: z.string().trim().min(1, "Username required"),
-  password: z.string().min(1, "Password required"),
+export const confirmBookingSchema = z.object({
+  paymentRef: z.string().trim().max(200).optional().default(""),
 });
 
-export const RoomFormSchema = z.object({
-  name: z.string().trim().min(2, "Name required").max(120),
+export const roomSchema = z.object({
+  name: z.string().trim().min(2),
   slug: z
     .string()
     .trim()
-    .min(2, "Slug required")
-    .max(120)
-    .regex(/^[a-z0-9-]+$/, "Slug can only contain lowercase letters, numbers and hyphens"),
-  description: z.string().trim().max(2000).default(""),
-  price_per_night: z.coerce.number().int().positive("Enter a valid price"),
-  capacity: z.coerce.number().int().min(1).max(30),
-  amenities: z.string().trim().default(""),
-  image_url: z.union([z.literal(""), z.string().trim().url("Enter a valid URL")]),
-  is_active: z.coerce.boolean().default(true),
-  sort_order: z.coerce.number().int().default(0),
+    .min(2)
+    .regex(/^[a-z0-9-]+$/, "Slug must be lowercase letters, numbers, hyphens"),
+  summary: z.string().trim().max(300).optional().default(""),
+  description: z.string().trim().max(5000).optional().default(""),
+  pricePerNight: z.coerce.number().int().min(0),
+  maxGuests: z.coerce.number().int().min(1).max(50),
+  bedType: z.string().trim().max(100).optional().default(""),
+  sizeSqft: z.coerce.number().int().min(0).optional().default(0),
+  images: z.array(z.string()).optional().default([]),
+  amenities: z.array(z.string()).optional().default([]),
+  isActive: z.boolean().optional().default(true),
+  sortOrder: z.coerce.number().int().optional().default(0),
 });
 
-export const SettingsFormSchema = z.object({
-  hotel_name: z.string().trim().min(1).max(120),
-  tagline: z.string().trim().max(200).default(""),
-  address: z.string().trim().max(300).default(""),
-  owner_phone: z
+// A field with `.default()` gets that default filled in by `.partial()`
+// whenever the field is simply omitted from the request body — it does
+// NOT stay `undefined`. Using `roomSchema.partial()` for partial updates
+// (e.g. RoomActions toggling only `isActive`) would silently reset every
+// other defaulted field (summary, description, images, amenities, ...)
+// back to empty on every request. This schema has no defaults, so an
+// omitted field parses to `undefined` and RoomModel.update's `?? existing.x`
+// merge leaves it untouched.
+export const roomUpdateSchema = z.object({
+  name: z.string().trim().min(2).optional(),
+  slug: z
     .string()
     .trim()
-    .regex(/^[0-9]{7,15}$/, "Enter phone as country code + number, digits only"),
-  upi_id: z.string().trim().min(3).max(80),
-  upi_payee_name: z.string().trim().min(1).max(120),
-  contact_email: z.union([z.literal(""), z.string().trim().email()]),
-  hero_image: z.union([z.literal(""), z.string().trim().url("Enter a valid URL")]),
-  about_text: z.string().trim().max(4000).default(""),
+    .min(2)
+    .regex(/^[a-z0-9-]+$/, "Slug must be lowercase letters, numbers, hyphens")
+    .optional(),
+  summary: z.string().trim().max(300).optional(),
+  description: z.string().trim().max(5000).optional(),
+  pricePerNight: z.coerce.number().int().min(0).optional(),
+  maxGuests: z.coerce.number().int().min(1).max(50).optional(),
+  bedType: z.string().trim().max(100).optional(),
+  sizeSqft: z.coerce.number().int().min(0).optional(),
+  images: z.array(z.string()).optional(),
+  amenities: z.array(z.string()).optional(),
+  isActive: z.boolean().optional(),
+  sortOrder: z.coerce.number().int().optional(),
+});
+
+export const settingsSchema = z.object({
+  resortName: z.string().trim().min(1),
+  tagline: z.string().trim().optional().default(""),
+  description: z.string().trim().optional().default(""),
+  address: z.string().trim().optional().default(""),
+  contactPhone: z.string().trim().optional().default(""),
+  contactEmail: z.union([z.string().trim().email(), z.literal("")]).optional().default(""),
+  heroImage: z.string().trim().optional().default(""),
+  upiId: z.string().trim().optional().default(""),
+  upiPayeeName: z.string().trim().optional().default(""),
+  whatsappOwnerNumber: z.string().trim().optional().default(""),
+  whatsappApiToken: z.string().trim().optional().default(""),
+  whatsappPhoneNumberId: z.string().trim().optional().default(""),
+  checkInTime: z.string().trim().optional().default(""),
+  checkOutTime: z.string().trim().optional().default(""),
+  aboutContent: z.string().trim().max(8000).optional().default(""),
+  escapeIntro: z.string().trim().max(2000).optional().default(""),
+  brandStory: z.string().trim().max(4000).optional().default(""),
+  // One guest quote per line, formatted "Quote text | Guest Name, Location".
+  // Shown on the homepage only when non-empty, so nothing fabricated ships
+  // until the resort supplies real guest feedback.
+  testimonials: z.string().trim().max(4000).optional().default(""),
+  instagramHandle: z.string().trim().max(60).optional().default(""),
+});
+
+export const loginSchema = z.object({
+  username: z.string().trim().min(1),
+  password: z.string().min(1),
+});
+
+export const bookingStatusSchema = z.object({
+  status: z.enum(["pending", "payment_claimed", "confirmed", "cancelled"]),
+});
+
+// Used by the admin calendar create-booking flow to record a booking from
+// another platform (for billing/reports) and block those dates on the site
+// in one step. Deliberately more lenient than the guest-facing
+// createBookingSchema: phone/email aren't always known for an OTA booking,
+// and the admin sets amount/status/source directly.
+export const adminCreateBookingSchema = z
+  .object({
+    roomId: z.string().min(1),
+    guestName: z.string().trim().min(2, "Name is required"),
+    guestPhone: z.string().trim().max(20).optional().default(""),
+    guestEmail: z
+      .union([z.string().trim().email(), z.literal("")])
+      .optional()
+      .default(""),
+    checkIn: z.string().min(1, "Check-in date is required"),
+    checkOut: z.string().min(1, "Check-out date is required"),
+    guests: z.coerce.number().int().min(1).max(20).optional().default(1),
+    totalAmount: z.coerce.number().int().min(0),
+    status: z
+      .enum(["pending", "payment_claimed", "confirmed", "cancelled"])
+      .optional()
+      .default("confirmed"),
+    source: z.string().trim().min(1).max(50).optional().default("Other"),
+    notes: z.string().trim().max(1000).optional().default(""),
+  })
+  .refine((data) => new Date(data.checkOut) > new Date(data.checkIn), {
+    message: "Check-out must be after check-in",
+    path: ["checkOut"],
+  });
+
+export const changePasswordSchema = z.object({
+  currentPassword: z.string().min(1),
+  newPassword: z.string().min(6),
 });

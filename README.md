@@ -1,42 +1,115 @@
 # Mapple View Resort
 
-A resort booking site built with Next.js (App Router), TypeScript, Tailwind CSS, and SQLite (via the built-in `node:sqlite` module).
+A resort website with an integrated booking system and a separate admin panel, built with Next.js, TypeScript, Tailwind CSS, deployed to **Cloudflare Workers**, backed by **Neon serverless Postgres** and **Cloudflare R2** (for room images).
 
 ## Features
 
-- **Public site** — home, rooms listing, room detail, about, contact.
-- **Booking flow** — a guest picks dates and submits a booking request, then lands on a confirmation page with:
-  - A UPI QR code (and deep link) to pay, built from the resort's UPI ID in Settings.
-  - A WhatsApp link pre-filled with the booking details, so the guest can notify the owner directly (there's no WhatsApp Business API integration here — this uses a `wa.me` click-to-chat link instead, which needs no credentials).
-- **Admin panel** (`/admin`) — cookie-session-protected:
-  - Rooms: create, edit, delete (rooms with existing bookings can't be deleted — deactivate them instead).
-  - Bookings: view all requests and update their status (pending / confirmed / cancelled).
-  - Settings: hotel name, tagline, address, owner WhatsApp number, UPI ID/payee name, contact email, about text.
+- **Public website** — home, rooms & suites, about, contact, all driven by content you manage in the admin panel.
+- **Booking flow** — a guest picks a room and dates, enters their name/phone/email, sees a UPI QR code (generated from the UPI ID you configure), and clicks **"I've Paid — Confirm Booking"**.
+- **WhatsApp notification** — on confirm, the booking is sent to the owner's WhatsApp number (configured in admin). If a WhatsApp Cloud API token is configured, it's sent automatically server-side; otherwise the guest's browser opens a pre-filled WhatsApp message to the owner as a fallback.
+- **Admin panel** (`/admin`, login-protected, separate from the live site) — manage rooms (with image upload to R2), view and update bookings, and configure resort info, UPI payment details, and WhatsApp settings.
 
-## Getting started
+## Stack
+
+- **Framework**: Next.js 16 (App Router) + TypeScript + Tailwind CSS v4
+- **Hosting**: Cloudflare Workers, via the [`@opennextjs/cloudflare`](https://opennext.js.org/cloudflare) adapter
+- **Database**: [Neon](https://neon.tech) serverless Postgres, via `@neondatabase/serverless`
+- **File storage**: Cloudflare R2 (room images — Workers has no writable local disk)
+
+## Local development
+
+1. Install dependencies:
+
+   ```bash
+   npm install
+   ```
+
+2. Copy `.dev.vars` if it doesn't already exist, and fill in:
+   - `DATABASE_URL` — your Neon connection string (Neon console → your project → Connection Details → pooled connection string). Local dev talks to the **same** Neon database as production unless you point it at a different Neon branch/project.
+   - `SESSION_SECRET` — a long random string (signs admin login sessions).
+   - `ADMIN_USERNAME` / `ADMIN_PASSWORD` — optional; if unset, a default `admin` / `changeme123` account is seeded on first run. **Change the password immediately** from Admin → Settings after logging in.
+
+   `.dev.vars` is gitignored and is the file this stack's local dev tooling reads (not `.env.local`).
+
+3. Run the dev server:
+
+   ```bash
+   npm run dev
+   ```
+
+   Visit [http://localhost:3000](http://localhost:3000) for the website and [http://localhost:3000/admin](http://localhost:3000/admin) for the admin panel. Local dev simulates Cloudflare bindings (R2, env vars) via Miniflare — room image uploads in dev go to a local-only simulated R2 bucket, not the real one.
+
+On first run against a fresh database, the app auto-creates its tables and seeds sample rooms + default settings — no separate migration step needed.
+
+## Configuring payments & WhatsApp (Admin → Settings)
+
+- **UPI Payment**: enter your UPI ID (VPA), e.g. `yourresort@okicici`, and the payee name. A QR code is generated on the fly for each booking using the exact amount due — any UPI app can scan it to pay.
+- **WhatsApp Notifications**: enter the owner's WhatsApp number (with country code, e.g. `919876543210`). This is all that's required for the fallback flow (the guest's device opens WhatsApp with the booking details pre-filled, ready to send).
+  - Optionally, for fully automatic server-side sending, configure a **WhatsApp Cloud API Access Token** and **Phone Number ID** from a [Meta WhatsApp Business API](https://developers.facebook.com/docs/whatsapp/cloud-api) app. Note Meta's messaging window rules apply to freeform business-initiated messages — the fallback link always works regardless.
+
+## Project Structure
+
+- `src/app/(site)/…` — public website pages (served at `/`, `/rooms`, `/about`, `/contact`, `/booking/[id]`), forced dynamic (`export const dynamic = "force-dynamic"` in its layout) since data comes from a live Postgres connection, not a build-time snapshot.
+- `src/app/admin/…` — admin panel (`/admin/login` is public; everything else under `/admin` requires login).
+- `src/app/api/…` — API routes for bookings (public) and admin management (protected).
+- `src/app/uploads/[key]/route.ts` — streams room images from the R2 bucket at request time.
+- `src/lib/db.ts` — Neon connection + idempotent schema migration (runs once per Worker isolate, on first query).
+- `src/lib/models.ts` — typed async data access (Rooms, Bookings, Settings).
+- `src/lib/upi.ts` / `src/lib/whatsapp.ts` — UPI QR generation and WhatsApp message/link building.
+- `src/proxy.ts` — protects `/admin` and `/api/admin/*` routes, redirecting unauthenticated requests to login (Next 16 renamed `middleware.ts` to `proxy.ts`).
+- `wrangler.jsonc` / `open-next.config.ts` / `cloudflare-env.d.ts` — Cloudflare Workers + OpenNext adapter configuration (the last is generated by `npm run cf-typegen`, safe to regenerate).
+
+## Deploying to Cloudflare
+
+One-time setup, in order:
+
+1. **Authenticate wrangler** (choose one):
+   ```bash
+   npx wrangler login
+   ```
+   or generate a Cloudflare API token (dashboard → Manage API Tokens) and export it as `CLOUDFLARE_API_TOKEN` instead — better for CI/non-interactive environments.
+
+2. **Create the R2 bucket** for room images (must match the `bucket_name` in `wrangler.jsonc`):
+   ```bash
+   npx wrangler r2 bucket create mapple-view-uploads
+   ```
+
+3. **Set the production secrets** (never commit these — they're stored encrypted by Cloudflare):
+   ```bash
+   npx wrangler secret put DATABASE_URL
+   npx wrangler secret put SESSION_SECRET
+   # optional, only if you want a non-default first admin account:
+   npx wrangler secret put ADMIN_USERNAME
+   npx wrangler secret put ADMIN_PASSWORD
+   ```
+
+4. **(Optional) Regenerate binding types** after any `wrangler.jsonc` change:
+   ```bash
+   npm run cf-typegen
+   ```
+
+### Build & deploy commands
 
 ```bash
-npm install
-cp .env.example .env.local   # set SESSION_SECRET (openssl rand -base64 32)
-npm run dev
+npm run deploy
 ```
 
-The SQLite database is created automatically at `data/mapple-view.db` on first run, seeded with sample rooms and a default admin user:
+This runs `opennextjs-cloudflare build && opennextjs-cloudflare deploy` — builds the Next.js app, bundles it for the Workers runtime via OpenNext, and deploys it to your Cloudflare account. Cloudflare prints the live `*.workers.dev` URL (or your custom domain, once attached) when it finishes.
 
-- **Username:** `admin`
-- **Password:** `changeme123`
-
-Change this password (or add a new admin user) directly in the database before deploying anywhere public — there's no in-app "change password" flow yet.
-
-## Tech notes
-
-- Auth: a signed (HS256/JWT via `jose`) `httpOnly` cookie session, checked in `src/proxy.ts` (Next.js 16 renamed `middleware.ts` to `proxy.ts`) and again in the admin layout/server actions.
-- Data: `node:sqlite` (`DatabaseSync`), no native build step required. Schema + seed data live in `src/lib/db.ts`.
-- Server Actions (`src/lib/actions/*`) handle all mutations (login, bookings, room CRUD, settings).
-
-## Build
+To build and preview locally against real Cloudflare bindings first (recommended before your first real deploy):
 
 ```bash
-npm run build
-npm start
+npm run preview
 ```
+
+### Continuous deployment from GitHub
+
+Either:
+- **Cloudflare dashboard** (simplest): Workers & Pages → Create → "Connect to Git" → select this repo/branch → Cloudflare builds and deploys automatically on every push. No YAML needed.
+- **GitHub Actions**: use [`cloudflare/wrangler-action`](https://github.com/cloudflare/wrangler-action) if you want tests to run before every deploy, or more control over the pipeline.
+
+## Notes
+
+- Room images are stored in the `mapple-view-uploads` R2 bucket and served through `/uploads/[key]`; there's nothing to back up on local disk.
+- Change the default admin password immediately after your first deploy.
+- `cloudflare-env.d.ts` is committed (it's large, ~600KB) so the project type-checks without every contributor needing to run `wrangler types` first; regenerate it with `npm run cf-typegen` whenever `wrangler.jsonc`'s bindings change.
