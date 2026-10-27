@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { differenceInCalendarDays, format, addDays, parseISO, eachDayOfInterval } from "date-fns";
 import { formatInr } from "@/lib/format";
 import type { Room } from "@/lib/types";
+import DateField from "@/components/ui/DateField";
 
 export default function BookingForm({
   room,
@@ -129,9 +130,9 @@ export default function BookingForm({
       <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
           <label className="text-xs font-medium text-ink/60">Check-in</label>
-          <input
-            type="date"
+          <DateField
             required
+            aria-label="Check-in"
             min={today}
             value={checkIn}
             onChange={(e) => {
@@ -140,18 +141,18 @@ export default function BookingForm({
                 setCheckOut(format(addDays(new Date(e.target.value), 1), "yyyy-MM-dd"));
               }
             }}
-            className="mt-1 min-h-11 w-full rounded-lg border border-line px-3 py-2.5 text-base focus:border-petrol-500 focus:outline-none"
+            className="mt-1 flex min-h-11 w-full items-center rounded-lg border border-line bg-white px-3 text-base focus-within:border-petrol-500"
           />
         </div>
         <div>
           <label className="text-xs font-medium text-ink/60">Check-out</label>
-          <input
-            type="date"
+          <DateField
             required
+            aria-label="Check-out"
             min={format(addDays(new Date(checkIn), 1), "yyyy-MM-dd")}
             value={checkOut}
             onChange={(e) => setCheckOut(e.target.value)}
-            className="mt-1 min-h-11 w-full rounded-lg border border-line px-3 py-2.5 text-base focus:border-petrol-500 focus:outline-none"
+            className="mt-1 flex min-h-11 w-full items-center rounded-lg border border-line bg-white px-3 text-base focus-within:border-petrol-500"
           />
         </div>
       </div>

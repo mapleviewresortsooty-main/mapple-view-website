@@ -2,6 +2,7 @@ import { endOfMonth, format, startOfMonth, startOfToday } from "date-fns";
 import { BookingModel, RoomModel } from "@/lib/models";
 import { formatInr, formatDate } from "@/lib/format";
 import StatusBadge from "@/components/admin/StatusBadge";
+import DateField from "@/components/ui/DateField";
 
 export default async function AdminReportsPage({
   searchParams,
@@ -65,20 +66,20 @@ export default async function AdminReportsPage({
       <form className="mt-6 flex flex-wrap items-end gap-4 rounded-2xl border border-petrol-100 bg-white p-4 shadow-sm">
         <div>
           <label className="text-xs font-medium text-ink/60">Check-in From</label>
-          <input
-            type="date"
+          <DateField
             name="from"
+            aria-label="Check-in from"
             defaultValue={from ?? ""}
-            className="mt-1 rounded-lg border border-line px-3 py-2 text-sm focus:border-petrol-500 focus:outline-none"
+            className="mt-1 flex w-44 items-center rounded-lg border border-line bg-white px-3 py-2 text-sm focus-within:border-petrol-500"
           />
         </div>
         <div>
           <label className="text-xs font-medium text-ink/60">Check-in To</label>
-          <input
-            type="date"
+          <DateField
             name="to"
+            aria-label="Check-in to"
             defaultValue={to ?? ""}
-            className="mt-1 rounded-lg border border-line px-3 py-2 text-sm focus:border-petrol-500 focus:outline-none"
+            className="mt-1 flex w-44 items-center rounded-lg border border-line bg-white px-3 py-2 text-sm focus-within:border-petrol-500"
           />
         </div>
         <button

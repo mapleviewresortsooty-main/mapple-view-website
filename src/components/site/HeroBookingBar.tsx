@@ -4,19 +4,15 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { format, addDays } from "date-fns";
 import Icon from "@/components/ui/Icon";
+import DateField from "@/components/ui/DateField";
 
 const MIN_GUESTS = 1;
 const MAX_GUESTS = 20;
 
-/** Full-field tap target for native date pickers (especially iOS/Android). */
-const dateInputClass =
-  "relative min-h-11 w-full min-w-0 cursor-pointer rounded-lg border border-line bg-white px-3 py-2.5 " +
-  "font-display text-base leading-none text-ink outline-none transition " +
-  "focus:border-petrol-500 focus:ring-2 focus:ring-petrol-500/20 " +
-  "[&::-webkit-date-and-time-value]:text-left " +
-  "[&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 " +
-  "[&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:w-full " +
-  "[&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-0";
+const dateFieldClass =
+  "flex min-h-11 w-full min-w-0 items-center rounded-lg border border-line bg-white px-3 " +
+  "font-display text-base leading-none text-ink transition " +
+  "focus-within:border-petrol-500 focus-within:ring-2 focus-within:ring-petrol-500/20";
 
 export default function HeroBookingBar() {
   const router = useRouter();
@@ -47,8 +43,7 @@ export default function HeroBookingBar() {
         <div className="grid min-w-0 flex-1 grid-cols-2 gap-x-3 gap-y-4 sm:grid-cols-3 sm:gap-0 sm:divide-x sm:divide-line">
           <label className="flex min-w-0 flex-col gap-2 border-r border-line pr-3 sm:border-r-0 sm:pr-6 lg:pr-8">
             <span className="label-caps text-ink-soft/70">Arrival</span>
-            <input
-              type="date"
+            <DateField
               required
               value={checkIn}
               min={today}
@@ -58,19 +53,18 @@ export default function HeroBookingBar() {
                   setCheckOut(format(addDays(new Date(e.target.value), 1), "yyyy-MM-dd"));
                 }
               }}
-              className={dateInputClass}
+              className={dateFieldClass}
             />
           </label>
 
           <label className="flex min-w-0 flex-col gap-2 sm:px-6 lg:px-8">
             <span className="label-caps text-ink-soft/70">Departure</span>
-            <input
-              type="date"
+            <DateField
               required
               value={checkOut}
               min={checkIn}
               onChange={(e) => setCheckOut(e.target.value)}
-              className={dateInputClass}
+              className={dateFieldClass}
             />
           </label>
 

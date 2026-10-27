@@ -17,6 +17,7 @@ import {
 import type { Booking, BookingStatus, Room } from "@/lib/types";
 import { formatInr } from "@/lib/format";
 import StatusBadge from "@/components/admin/StatusBadge";
+import DateField from "@/components/ui/DateField";
 
 const SOURCE_OPTIONS = [
   "Walk-in",
@@ -806,24 +807,24 @@ function CreateBookingModal({
         <div className="mt-4 grid grid-cols-2 gap-3">
           <div>
             <label className="text-xs font-medium text-ink/60">Check-in</label>
-            <input
-              type="date"
+            <DateField
               required
+              aria-label="Check-in"
               min={todayKey}
               value={checkIn}
               onChange={(e) => onCheckInChange(e.target.value)}
-              className="mt-1 w-full rounded-lg border border-line px-3 py-2 text-sm"
+              className="mt-1 flex w-full items-center rounded-lg border border-line bg-white px-3 py-2 text-sm"
             />
           </div>
           <div>
             <label className="text-xs font-medium text-ink/60">Check-out</label>
-            <input
-              type="date"
+            <DateField
               required
+              aria-label="Check-out"
               value={checkOut}
               min={format(addDays(parseISO(checkIn), 1), "yyyy-MM-dd")}
               onChange={(e) => onCheckOutChange(e.target.value)}
-              className="mt-1 w-full rounded-lg border border-line px-3 py-2 text-sm"
+              className="mt-1 flex w-full items-center rounded-lg border border-line bg-white px-3 py-2 text-sm"
             />
           </div>
         </div>
