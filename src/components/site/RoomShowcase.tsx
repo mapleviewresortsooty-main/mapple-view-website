@@ -57,7 +57,7 @@ export default function RoomShowcase({
                 href={`/rooms/${room.slug}`}
                 className="label-caps mt-6 flex min-h-11 items-center justify-center gap-2 bg-charcoal px-4 py-3 text-stone transition hover:bg-charcoal-light md:hidden"
               >
-                Explore Suite
+                Explore Room
                 <Icon name="arrow_forward" className="text-sm" />
               </Link>
               <button
@@ -65,7 +65,7 @@ export default function RoomShowcase({
                 onClick={() => setActive(room)}
                 className="label-caps mt-6 hidden min-h-11 items-center justify-center gap-2 bg-charcoal px-4 py-3 text-stone transition hover:bg-charcoal-light md:flex"
               >
-                Explore Suite
+                Explore Room
                 <Icon name="arrow_forward" className="text-sm" />
               </button>
             </div>
