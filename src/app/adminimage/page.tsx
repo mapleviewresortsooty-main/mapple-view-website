@@ -18,9 +18,10 @@ export default async function AdminImagePage() {
     <div>
       <h1 className="font-sans text-2xl font-bold text-ink">Site Images</h1>
       <p className="mt-1 max-w-2xl text-sm text-ink/60">
-        Add, remove and reorder the photos shown in each section of the website.
-        Every change saves automatically. If a section ends up with no images of
-        its own, it falls back to the built-in photo.
+        Add, remove and reorder the photos shown in each section of the website,
+        then press <strong>Save changes</strong> on a card to publish them. If a
+        section ends up with no images of its own, it falls back to the built-in
+        photo.
       </p>
       <div className="mt-8">
         <SiteImagesManager
