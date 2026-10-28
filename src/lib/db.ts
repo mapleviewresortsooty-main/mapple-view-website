@@ -14,7 +14,7 @@ declare global {
 }
 
 /** Bump when runMigration gains new required steps (indexes, columns, etc.). */
-const SCHEMA_VERSION = 4;
+const SCHEMA_VERSION = 5;
 
 // Lazy: Next.js's build-time "collecting page data" step imports every API
 // route module (including this one, transitively) just to inspect its
@@ -353,6 +353,102 @@ async function runMigration() {
       JSON.stringify(merged),
       thinRooms[i].id,
     ]);
+  }
+
+  // The resort has six rooms — backfill placeholders up to that count so the
+  // full inventory shows on the site. Names, prices and details get replaced
+  // later through the admin; runs only while fewer than six exist, so it
+  // never duplicates or touches real rooms.
+  const roomTotal = (
+    (await sql.query("SELECT COUNT(*)::int AS count FROM rooms")) as {
+      count: number;
+    }[]
+  )[0].count;
+  if (roomTotal < 6) {
+    const placeholderRooms = [
+      {
+        name: "Hilltop Family Room",
+        slug: "hilltop-family-room",
+        summary: "Spacious room for families and small groups, looking out over the estate.",
+        description:
+          "A roomy option for families, with two queen beds and plenty of space to spread out after a day in the hills.",
+        price_per_night: 5500,
+        max_guests: 4,
+        bed_type: "2 Queen Beds",
+        size_sqft: 420,
+        images: JSON.stringify(roomGalleryImages(2)),
+        amenities: JSON.stringify([
+          "Free Wi-Fi",
+          "Complimentary Breakfast",
+          "Air Conditioning",
+          "Hot Water",
+          "Flat-screen TV",
+        ]),
+      },
+      {
+        name: "Standard Double Room",
+        slug: "standard-double-room",
+        summary: "Comfortable double room — a simple, good-value base for exploring Ooty.",
+        description:
+          "A straightforward, comfortable double room with everything you need for a quiet mountain stay.",
+        price_per_night: 3200,
+        max_guests: 2,
+        bed_type: "Double Bed",
+        size_sqft: 260,
+        images: JSON.stringify(roomGalleryImages(6)),
+        amenities: JSON.stringify([
+          "Free Wi-Fi",
+          "Hot Water",
+          "Work Desk",
+        ]),
+      },
+      {
+        name: "Valley Sunrise Room",
+        slug: "valley-sunrise-room",
+        summary: "East-facing room that catches the morning sun over the valley.",
+        description:
+          "An east-facing room that wakes up with the sun — soft morning light over the valley and a queen bed to enjoy it from.",
+        price_per_night: 4200,
+        max_guests: 3,
+        bed_type: "Queen Bed",
+        size_sqft: 300,
+        images: JSON.stringify(roomGalleryImages(10)),
+        amenities: JSON.stringify([
+          "Free Wi-Fi",
+          "Valley View",
+          "Complimentary Breakfast",
+          "Hot Water",
+        ]),
+      },
+    ];
+    const maxSort = (
+      (await sql.query(
+        "SELECT COALESCE(MAX(sort_order), 0)::int AS m FROM rooms"
+      )) as { m: number }[]
+    )[0].m;
+    const toInsert = placeholderRooms.slice(0, 6 - roomTotal);
+    for (let i = 0; i < toInsert.length; i++) {
+      const room = toInsert[i];
+      await sql.query(
+        `INSERT INTO rooms (id, name, slug, summary, description, price_per_night, max_guests, bed_type, size_sqft, images, amenities, sort_order)
+         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)
+         ON CONFLICT (slug) DO NOTHING`,
+        [
+          crypto.randomUUID(),
+          room.name,
+          room.slug,
+          room.summary,
+          room.description,
+          room.price_per_night,
+          room.max_guests,
+          room.bed_type,
+          room.size_sqft,
+          room.images,
+          room.amenities,
+          maxSort + i + 1,
+        ]
+      );
+    }
   }
 
   // Correct known-wrong placeholder addresses (e.g. Mussoorie) and align
