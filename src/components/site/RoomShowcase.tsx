@@ -52,10 +52,18 @@ export default function RoomShowcase({
                   {room.summary}
                 </p>
               </div>
+              {/* Phones go straight to the room page; desktop gets the quick view */}
+              <Link
+                href={`/rooms/${room.slug}`}
+                className="label-caps mt-6 flex min-h-11 items-center justify-center gap-2 bg-charcoal px-4 py-3 text-stone transition hover:bg-charcoal-light md:hidden"
+              >
+                Explore Suite
+                <Icon name="arrow_forward" className="text-sm" />
+              </Link>
               <button
                 type="button"
                 onClick={() => setActive(room)}
-                className="label-caps mt-6 flex min-h-11 items-center justify-center gap-2 bg-charcoal px-4 py-3 text-stone transition hover:bg-charcoal-light"
+                className="label-caps mt-6 hidden min-h-11 items-center justify-center gap-2 bg-charcoal px-4 py-3 text-stone transition hover:bg-charcoal-light md:flex"
               >
                 Explore Suite
                 <Icon name="arrow_forward" className="text-sm" />

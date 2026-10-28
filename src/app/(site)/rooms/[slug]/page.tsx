@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import { RoomModel } from "@/lib/models";
 import { formatInr } from "@/lib/format";
 import BookingForm from "@/components/site/BookingForm";
+import RoomGallery from "@/components/site/RoomGallery";
 import { stockRoomImage } from "@/lib/stockImages";
 
 export async function generateMetadata(
@@ -36,35 +36,12 @@ export default async function RoomDetailPage({
     <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6">
       <div className="grid gap-10 lg:grid-cols-5">
         <div className="lg:col-span-3">
-          <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl bg-petrol-100">
-            <Image
-              src={room.images[0] || stockRoomImage(room.sort_order)}
-              alt={room.name}
-              fill
-              sizes="(min-width: 1024px) 60vw, 100vw"
-              className="object-cover"
-              priority
-            />
-          </div>
-
-          {room.images.length > 1 && (
-            <div className="mt-4 grid grid-cols-3 gap-3 sm:grid-cols-5">
-              {room.images.slice(1).map((img, i) => (
-                <div
-                  key={i}
-                  className="relative aspect-square overflow-hidden rounded-lg bg-petrol-100"
-                >
-                  <Image
-                    src={img}
-                    alt={`${room.name} photo ${i + 2}`}
-                    fill
-                    sizes="150px"
-                    className="object-cover"
-                  />
-                </div>
-              ))}
-            </div>
-          )}
+          <RoomGallery
+            images={
+              room.images.length ? room.images : [stockRoomImage(room.sort_order)]
+            }
+            name={room.name}
+          />
 
           <h1 className="mt-8 font-display text-3xl font-bold text-ink sm:text-4xl">
             {room.name}
