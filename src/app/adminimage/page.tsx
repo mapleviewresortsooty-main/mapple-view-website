@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
-import { SettingsModel, SiteImagesModel } from "@/lib/models";
+import { RoomModel, SettingsModel, SiteImagesModel } from "@/lib/models";
 import { resolveSiteImages, SITE_IMAGE_SECTIONS } from "@/lib/siteImages";
 import SiteImagesManager from "@/components/admin/SiteImagesManager";
 
 export const metadata: Metadata = { title: "Site Images | Mapple View Resort" };
 
 export default async function AdminImagePage() {
-  const [stored, settings] = await Promise.all([
+  const [stored, settings, rooms] = await Promise.all([
     SiteImagesModel.all(),
     SettingsModel.get(),
+    RoomModel.all(true),
   ]);
   const { resolved, overridden } = resolveSiteImages(stored, settings.hero_image);
   const { resolved: fallbacks } = resolveSiteImages({}, settings.hero_image);
@@ -27,11 +28,14 @@ export default async function AdminImagePage() {
           initial={resolved}
           fallbacks={fallbacks}
           overridden={overridden}
+          rooms={rooms.map((r) => ({
+            id: r.id,
+            name: r.name,
+            is_active: r.is_active,
+            images: r.images,
+          }))}
         />
       </div>
-      <p className="mt-8 text-xs text-ink/50">
-        Room photos are managed per room under Rooms.
-      </p>
     </div>
   );
 }

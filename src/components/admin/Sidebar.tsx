@@ -9,7 +9,6 @@ const links = [
   { href: "/admin/bookings", label: "Bookings" },
   { href: "/admin/rooms", label: "Rooms" },
   { href: "/admin/reports", label: "Reports & Billing" },
-  { href: "/adminimage", label: "Site Images" },
   { href: "/admin/settings", label: "Settings" },
 ];
 
