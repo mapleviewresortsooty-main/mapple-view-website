@@ -1,6 +1,10 @@
 import { neon } from "@neondatabase/serverless";
 import bcrypt from "bcryptjs";
-import { stockImages, stockRoomImage } from "@/lib/stockImages";
+import {
+  stockImages,
+  roomGalleryImages,
+  ROOM_GALLERY_TARGET,
+} from "@/lib/stockImages";
 import { RESORT_LOCATION } from "@/lib/location";
 
 type SqlClient = ReturnType<typeof neon<false, false>>;
@@ -11,7 +15,7 @@ declare global {
 }
 
 /** Bump when runMigration gains new required steps (indexes, columns, etc.). */
-const SCHEMA_VERSION = 3;
+const SCHEMA_VERSION = 4;
 
 // Lazy: Next.js's build-time "collecting page data" step imports every API
 // route module (including this one, transitively) just to inspect its
@@ -237,7 +241,7 @@ async function runMigration() {
         max_guests: 3,
         bed_type: "King Bed",
         size_sqft: 320,
-        images: JSON.stringify([stockImages.rooms[0]]),
+        images: JSON.stringify(roomGalleryImages(0)),
         amenities: JSON.stringify([
           "Free Wi-Fi",
           "Valley View Balcony",
@@ -258,7 +262,7 @@ async function runMigration() {
         max_guests: 4,
         bed_type: "King Bed + Sofa Bed",
         size_sqft: 500,
-        images: JSON.stringify([stockImages.rooms[1]]),
+        images: JSON.stringify(roomGalleryImages(4)),
         amenities: JSON.stringify([
           "Free Wi-Fi",
           "Living Area",
@@ -280,7 +284,7 @@ async function runMigration() {
         max_guests: 2,
         bed_type: "Queen Bed",
         size_sqft: 220,
-        images: JSON.stringify([stockImages.rooms[2]]),
+        images: JSON.stringify(roomGalleryImages(8)),
         amenities: JSON.stringify([
           "Free Wi-Fi",
           "Garden View",
@@ -322,8 +326,33 @@ async function runMigration() {
   )) as { id: string; sort_order: number }[];
   for (let i = 0; i < bareRooms.length; i++) {
     await sql.query("UPDATE rooms SET images = $1 WHERE id = $2", [
-      JSON.stringify([stockRoomImage(i)]),
+      JSON.stringify(roomGalleryImages(i)),
       bareRooms[i].id,
+    ]);
+  }
+
+  // Top every room's gallery up to a full set — the original seed stored a
+  // single photo per room. Appends stock placeholders after each room's
+  // existing photos, never duplicates a photo already in the list, and skips
+  // rooms that already have enough (so real uploads are untouched).
+  const thinRooms = (await sql.query(
+    "SELECT id, images FROM rooms ORDER BY sort_order"
+  )) as { id: string; images: string }[];
+  for (let i = 0; i < thinRooms.length; i++) {
+    let imgs: string[] = [];
+    try {
+      imgs = JSON.parse(thinRooms[i].images || "[]");
+    } catch {
+      imgs = [];
+    }
+    if (imgs.length >= ROOM_GALLERY_TARGET) continue;
+    const additions = roomGalleryImages(i * 4, ROOM_GALLERY_TARGET * 2).filter(
+      (u) => !imgs.includes(u)
+    );
+    const merged = [...imgs, ...additions].slice(0, ROOM_GALLERY_TARGET);
+    await sql.query("UPDATE rooms SET images = $1 WHERE id = $2", [
+      JSON.stringify(merged),
+      thinRooms[i].id,
     ]);
   }
 

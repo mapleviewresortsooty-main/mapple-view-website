@@ -49,7 +49,7 @@ export default async function RoomDetailPage({
 
           {room.images.length > 1 && (
             <div className="mt-4 grid grid-cols-4 gap-3">
-              {room.images.slice(1, 5).map((img, i) => (
+              {room.images.slice(1).map((img, i) => (
                 <div
                   key={i}
                   className="relative aspect-square overflow-hidden rounded-lg bg-petrol-100"

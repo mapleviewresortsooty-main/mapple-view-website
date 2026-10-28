@@ -62,3 +62,32 @@ export const stockImages = {
 export function stockRoomImage(index: number): string {
   return stockImages.rooms[index % stockImages.rooms.length];
 }
+
+// Pool of placeholder shots suitable for room galleries — interiors first,
+// then detail/amenity/food shots, then views. Rooms take a rotated slice so
+// no two rooms end up showing the same set.
+const roomGalleryPool = [
+  stockImages.rooms[0],
+  stockImages.gallery.soakingTub,
+  stockImages.dining.main,
+  stockImages.rooms[1],
+  stockImages.gallery.library,
+  stockImages.dining.tea,
+  stockImages.rooms[2],
+  stockImages.gallery.sunbeams,
+  stockImages.gallery.breakfast,
+  stockImages.dining.produce,
+  stockImages.gallery.facade,
+  stockImages.personaReading,
+];
+
+export const ROOM_GALLERY_TARGET = 6;
+
+/** `count` placeholder photos for a room gallery, rotated by `offset`. */
+export function roomGalleryImages(
+  offset: number,
+  count = ROOM_GALLERY_TARGET
+): string[] {
+  const pool = roomGalleryPool;
+  return Array.from({ length: count }, (_, i) => pool[(offset + i) % pool.length]);
+}
