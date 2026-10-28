@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import type { Room } from "@/lib/types";
@@ -17,6 +17,7 @@ export default function RoomShowcase({
 }) {
   const [active, setActive] = useState<Room | null>(null);
   const activeIndex = active ? rooms.findIndex((r) => r.id === active.id) : -1;
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     document.body.style.overflow = active ? "hidden" : "";
@@ -25,17 +26,49 @@ export default function RoomShowcase({
     };
   }, [active]);
 
+  function scrollBy(dir: -1 | 1) {
+    const el = scrollRef.current;
+    if (!el) return;
+    el.scrollBy({ left: dir * el.clientWidth * 0.85, behavior: "smooth" });
+  }
+
   return (
     <>
-      <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+      {rooms.length > 1 && (
+        <div className="mb-5 flex justify-end gap-2">
+          <button
+            type="button"
+            aria-label="Scroll rooms left"
+            onClick={() => scrollBy(-1)}
+            className="flex h-10 w-10 items-center justify-center border border-line text-ink transition hover:bg-petrol-50"
+          >
+            <Icon name="chevron_left" className="text-xl" />
+          </button>
+          <button
+            type="button"
+            aria-label="Scroll rooms right"
+            onClick={() => scrollBy(1)}
+            className="flex h-10 w-10 items-center justify-center border border-line text-ink transition hover:bg-petrol-50"
+          >
+            <Icon name="chevron_right" className="text-xl" />
+          </button>
+        </div>
+      )}
+      <div
+        ref={scrollRef}
+        className="flex snap-x snap-mandatory gap-6 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      >
         {rooms.map((room, i) => (
-          <div key={room.id} className="group flex flex-col bg-stone-dark/40 transition hover:shadow-lg">
+          <div
+            key={room.id}
+            className="group flex w-[85%] shrink-0 snap-start flex-col bg-stone-dark/40 transition hover:shadow-lg sm:w-[46%] lg:w-[calc(33.333%-1rem)]"
+          >
             <div className="relative aspect-[4/3] w-full overflow-hidden bg-petrol-100">
               <Image
                 src={room.images[0] || stockRoomImage(i)}
                 alt={room.name}
                 fill
-                sizes="(min-width: 768px) 33vw, 100vw"
+                sizes="(min-width: 1024px) 33vw, (min-width: 640px) 46vw, 85vw"
                 className="object-cover transition duration-700 group-hover:scale-105"
               />
               <div className="label-caps absolute left-0 top-0 bg-charcoal/85 px-3 py-1.5 text-stone backdrop-blur-sm">

@@ -62,7 +62,7 @@ export default async function HomePage() {
     getActiveRooms(),
     getSiteImages(),
   ]);
-  const rooms = allRooms.slice(0, 3);
+  const rooms = allRooms;
 
   const faqItems = [
     {
