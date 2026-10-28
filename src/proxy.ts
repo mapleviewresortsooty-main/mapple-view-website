@@ -14,7 +14,9 @@ export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   const isAdminApi = pathname.startsWith("/api/admin") && pathname !== "/api/admin/login";
-  const isAdminPage = pathname.startsWith("/admin") && pathname !== "/admin/login";
+  const isAdminPage =
+    (pathname.startsWith("/admin") && pathname !== "/admin/login") ||
+    pathname === "/adminimage";
 
   if (!isAdminApi && !isAdminPage) {
     return NextResponse.next();
@@ -44,5 +46,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/api/admin/:path*"],
+  matcher: ["/admin/:path*", "/adminimage", "/api/admin/:path*"],
 };

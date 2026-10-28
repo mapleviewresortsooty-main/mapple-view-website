@@ -9,7 +9,7 @@ import HeroBookingBar from "@/components/site/HeroBookingBar";
 import Testimonials from "@/components/site/Testimonials";
 import LocationSection from "@/components/site/LocationSection";
 import Reveal from "@/components/site/Reveal";
-import { getActiveRooms, getSiteSettings } from "@/lib/site-data";
+import { getActiveRooms, getSiteSettings, getSiteImages } from "@/lib/site-data";
 import { seasons } from "@/lib/ooty";
 import { mapsDirectionsUrl, RESORT_LOCATION } from "@/lib/location";
 import type { GalleryItem } from "@/components/site/GalleryGrid";
@@ -49,10 +49,17 @@ const ethos = [
   },
 ];
 
+const viewCaptions = [
+  "Morning light over the tea ridge",
+  "A quiet corner, view included",
+  "The estate, from the driveway",
+];
+
 export default async function HomePage() {
-  const [settings, allRooms] = await Promise.all([
+  const [settings, allRooms, siteImages] = await Promise.all([
     getSiteSettings(),
     getActiveRooms(),
+    getSiteImages(),
   ]);
   const rooms = allRooms.slice(0, 3);
 
@@ -98,9 +105,12 @@ export default async function HomePage() {
       caption: r.name,
       span: i === 0 ? ("wide" as const) : undefined,
     })),
-    { id: "view-sunbeams", category: "views" as const, src: stockImages.gallery.sunbeams, caption: "Morning light over the tea ridge" },
-    { id: "view-tub", category: "views" as const, src: stockImages.gallery.soakingTub, caption: "A quiet corner, view included" },
-    { id: "view-facade", category: "views" as const, src: stockImages.gallery.facade, caption: "The estate, from the driveway" },
+    ...siteImages.gallery.map((src, i) => ({
+      id: `view-${i}`,
+      category: "views" as const,
+      src,
+      caption: viewCaptions[i] ?? "Mapple View Resort",
+    })),
   ];
 
   return (
@@ -108,7 +118,7 @@ export default async function HomePage() {
       {/* ============================= HERO ============================= */}
       <section className="relative isolate flex min-h-[100svh] flex-col justify-between overflow-hidden text-stone md:min-h-[92vh]">
         <Image
-          src={settings.hero_image || stockImages.heroBg}
+          src={siteImages.hero[0] || stockImages.heroBg}
           alt=""
           fill
           priority
@@ -187,7 +197,7 @@ export default async function HomePage() {
             </div>
           </Reveal>
           <div className="lg:col-span-7">
-            <EthosDepthCarousel />
+            <EthosDepthCarousel images={siteImages.ethos} />
           </div>
         </div>
       </section>
@@ -225,7 +235,7 @@ export default async function HomePage() {
             </p>
           </div>
           <div className="mt-12">
-            <WakeUpHereTimeline />
+            <WakeUpHereTimeline images={siteImages.timeline} />
           </div>
         </div>
       </section>
@@ -268,7 +278,7 @@ export default async function HomePage() {
           Some views don&apos;t need a filter.
         </h2>
         <div className="mt-10">
-          <PanoramicDrag />
+          <PanoramicDrag image={siteImages.panoramic[0]} />
         </div>
       </section>
 
@@ -341,7 +351,7 @@ export default async function HomePage() {
             @{settings.instagram_handle.replace(/^@/, "")}
           </a>
           <div className="mx-auto mt-8 grid max-w-2xl grid-cols-4 gap-3">
-            {stockImages.social.map((src) => (
+            {siteImages.social.map((src) => (
               <div key={src} className="relative aspect-square overflow-hidden bg-petrol-100">
                 <Image src={src} alt="" fill sizes="120px" className="object-cover" />
               </div>
@@ -353,7 +363,7 @@ export default async function HomePage() {
       {/* =============================== FINAL CTA =============================== */}
       <section className="relative overflow-hidden bg-charcoal text-stone">
         <Image
-          src={stockImages.timeline[4]}
+          src={siteImages.cta[0] || stockImages.timeline[4]}
           alt=""
           fill
           sizes="100vw"

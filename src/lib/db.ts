@@ -11,7 +11,7 @@ declare global {
 }
 
 /** Bump when runMigration gains new required steps (indexes, columns, etc.). */
-const SCHEMA_VERSION = 2;
+const SCHEMA_VERSION = 3;
 
 // Lazy: Next.js's build-time "collecting page data" step imports every API
 // route module (including this one, transitively) just to inspect its
@@ -166,6 +166,14 @@ async function runMigration() {
       username TEXT NOT NULL UNIQUE,
       password_hash TEXT NOT NULL,
       created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    )
+  `);
+
+  await sql.query(`
+    CREATE TABLE IF NOT EXISTS site_images (
+      section TEXT PRIMARY KEY,
+      images TEXT NOT NULL DEFAULT '[]',
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
     )
   `);
 

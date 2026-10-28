@@ -1,32 +1,23 @@
 "use client";
 
 import DepthCarousel from "@/components/site/DepthCarousel";
-import { stockImages } from "@/lib/stockImages";
 
-const ethosCarouselItems = [
-  {
-    image: stockImages.escapeTall,
-    alt: "Morning mist over the hills near Mapple View",
-  },
-  {
-    image: stockImages.escapeSquare,
-    alt: "A warm, quiet corner at Mapple View",
-  },
-  {
-    image: stockImages.gallery.sunbeams,
-    alt: "Morning light over the tea ridge",
-  },
-  {
-    image: stockImages.gallery.facade,
-    alt: "The estate from the driveway",
-  },
+const alts = [
+  "Morning mist over the hills near Mapple View",
+  "A warm, quiet corner at Mapple View",
+  "Morning light over the tea ridge",
+  "The estate from the driveway",
 ];
 
-export default function EthosDepthCarousel() {
+export default function EthosDepthCarousel({ images }: { images: string[] }) {
+  const items = images.map((image, i) => ({
+    image,
+    alt: alts[i] ?? "Mapple View Resort",
+  }));
   return (
     <div className="relative h-[400px] w-full sm:h-[420px]">
       <DepthCarousel
-        items={ethosCarouselItems}
+        items={items}
         cardWidth={280}
         cardHeight={340}
         radius={4}

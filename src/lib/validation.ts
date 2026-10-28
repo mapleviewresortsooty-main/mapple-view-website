@@ -138,6 +138,19 @@ export const adminCreateBookingSchema = z
     path: ["checkOut"],
   });
 
+export const siteImagesUpdateSchema = z.object({
+  section: z.enum([
+    "hero",
+    "ethos",
+    "timeline",
+    "panoramic",
+    "gallery",
+    "social",
+    "cta",
+  ]),
+  images: z.array(z.string().trim().min(1).max(500)).max(24),
+});
+
 export const changePasswordSchema = z.object({
   currentPassword: z.string().min(1),
   newPassword: z.string().min(6),

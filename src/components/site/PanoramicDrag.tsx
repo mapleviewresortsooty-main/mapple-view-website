@@ -2,9 +2,8 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { stockImages } from "@/lib/stockImages";
 
-export default function PanoramicDrag() {
+export default function PanoramicDrag({ image }: { image?: string }) {
   const [pan, setPan] = useState(0);
 
   return (
@@ -13,13 +12,15 @@ export default function PanoramicDrag() {
         className="absolute inset-0 h-full w-[170%] transition-[left] duration-100"
         style={{ left: `-${pan}%` }}
       >
-        <Image
-          src={stockImages.panoramic}
-          alt="Panoramic view of the Nilgiri hills"
-          fill
-          sizes="100vw"
-          className="object-cover"
-        />
+        {image && (
+          <Image
+            src={image}
+            alt="Panoramic view of the Nilgiri hills"
+            fill
+            sizes="100vw"
+            className="object-cover"
+          />
+        )}
       </div>
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-charcoal/70 via-transparent to-transparent" />
 

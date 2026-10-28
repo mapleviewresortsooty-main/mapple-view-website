@@ -38,3 +38,23 @@ export async function POST(request: NextRequest) {
 
   return NextResponse.json({ url: `/uploads/${key}` });
 }
+
+/** Removes an uploaded object from the R2 bucket (e.g. when an image is
+ *  deleted from a site section or room). Accepts { url: "/uploads/<key>" }. */
+export async function DELETE(request: NextRequest) {
+  const body = (await request.json().catch(() => null)) as {
+    url?: unknown;
+  } | null;
+  const url = typeof body?.url === "string" ? body.url : "";
+  if (!url.startsWith("/uploads/")) {
+    return NextResponse.json({ error: "Not an uploaded image" }, { status: 400 });
+  }
+  const key = decodeURIComponent(url.slice("/uploads/".length));
+  if (!key || key.includes("..")) {
+    return NextResponse.json({ error: "Invalid image key" }, { status: 400 });
+  }
+
+  const { env } = await getCloudflareContext({ async: true });
+  await env.UPLOADS_BUCKET.delete(key);
+  return NextResponse.json({ ok: true });
+}

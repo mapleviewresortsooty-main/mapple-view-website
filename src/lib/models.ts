@@ -405,6 +405,38 @@ export const BookingModel = {
   },
 };
 
+export const SiteImagesModel = {
+  /** Raw stored overrides: section key → ordered image list. */
+  async all(): Promise<Record<string, string[]>> {
+    await ensureMigrated();
+    const rows = (await sql.query("SELECT section, images FROM site_images")) as {
+      section: string;
+      images: string;
+    }[];
+    const out: Record<string, string[]> = {};
+    for (const row of rows) {
+      try {
+        out[row.section] = JSON.parse(row.images || "[]");
+      } catch {
+        out[row.section] = [];
+      }
+    }
+    return out;
+  },
+  async set(section: string, images: string[]): Promise<void> {
+    await ensureMigrated();
+    await sql.query(
+      `INSERT INTO site_images (section, images, updated_at) VALUES ($1, $2, now())
+       ON CONFLICT (section) DO UPDATE SET images = EXCLUDED.images, updated_at = now()`,
+      [section, JSON.stringify(images)]
+    );
+  },
+  async clear(section: string): Promise<void> {
+    await ensureMigrated();
+    await sql.query("DELETE FROM site_images WHERE section = $1", [section]);
+  },
+};
+
 export const SettingsModel = {
   async get(): Promise<Settings> {
     await ensureMigrated();
