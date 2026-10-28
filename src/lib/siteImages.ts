@@ -58,6 +58,13 @@ export const SITE_IMAGE_SECTIONS = [
     max: 1,
     hint: "Faded photo behind the final call-to-action.",
   },
+  {
+    key: "about",
+    label: "About page photo",
+    page: "About",
+    max: 1,
+    hint: "Photo beside the story text on the About page.",
+  },
 ] as const;
 
 export type SiteImageKey = (typeof SITE_IMAGE_SECTIONS)[number]["key"];
@@ -83,6 +90,7 @@ export const SITE_IMAGE_DEFAULTS: Record<SiteImageKey, string[]> = {
   social: [...stockImages.social],
   ooty: attractions.map((a) => a.image),
   cta: [stockImages.timeline[4]],
+  about: [stockImages.escapeSquare],
 };
 
 export function isSiteImageKey(value: string): value is SiteImageKey {

@@ -10,12 +10,10 @@ type NavLink = { href: string; label: string };
 
 export default function NavShell({
   resortName,
-  contactPhone,
   whatsappNumber,
   links,
 }: {
   resortName: string;
-  contactPhone: string;
   whatsappNumber: string;
   links: NavLink[];
 }) {
@@ -77,14 +75,6 @@ export default function NavShell({
             ))}
           </nav>
           <div className="flex items-center gap-3">
-            {contactPhone && (
-              <a
-                href={`tel:${contactPhone.replace(/\s/g, "")}`}
-                className="label-caps hidden text-ink-soft xl:block"
-              >
-                {contactPhone}
-              </a>
-            )}
             <Link
               href="/rooms"
               className="label-caps hidden bg-charcoal px-5 py-3 text-stone transition hover:bg-charcoal-light sm:inline-flex"

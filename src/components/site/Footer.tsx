@@ -12,7 +12,7 @@ export default async function Footer() {
       <div className="relative mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:px-6 md:grid-cols-12">
         <div className="md:col-span-4">
           <div className="flex items-center gap-2.5">
-            <Image src={stockImages.logoMark} alt="" width={28} height={28} className="h-7 w-7 shrink-0 object-contain" />
+            <Image src={stockImages.logoMark} alt="" width={28} height={28} className="h-8 w-8 shrink-0 rounded-full bg-stone object-contain p-1" />
             <h3 className="font-display text-2xl font-medium text-stone">
               {settings.resort_name}
             </h3>
@@ -32,11 +32,6 @@ export default async function Footer() {
             <li>
               <Link href="/about" className="inline-flex min-h-11 items-center hover:text-petrol-300">
                 About the Resort
-              </Link>
-            </li>
-            <li>
-              <Link href="/explore-ooty" className="inline-flex min-h-11 items-center hover:text-petrol-300">
-                Explore Ooty
               </Link>
             </li>
             <li>

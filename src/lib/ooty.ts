@@ -1,6 +1,5 @@
-// Real, verifiable facts about Ooty and the Nilgiris, shared between the
-// homepage's interactive destination panel and the full /explore-ooty page
-// so the two never drift apart or contradict each other.
+// Real, verifiable facts about Ooty and the Nilgiris, shown in the
+// homepage's interactive destination panel.
 import { stockImages } from "@/lib/stockImages";
 
 // Distances/travel times from Lovedale are intentionally omitted rather

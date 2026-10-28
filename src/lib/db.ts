@@ -1,7 +1,6 @@
 import { neon } from "@neondatabase/serverless";
 import bcrypt from "bcryptjs";
 import {
-  stockImages,
   roomGalleryImages,
   ROOM_GALLERY_TARGET,
 } from "@/lib/stockImages";

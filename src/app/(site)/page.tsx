@@ -1,4 +1,3 @@
-import Link from "next/link";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import { LinkButton } from "@/components/ui/Button";
@@ -255,12 +254,6 @@ export default async function HomePage() {
                 Where the Mountains Slow Time Down
               </h2>
             </div>
-            <Link
-              href="/explore-ooty"
-              className="label-caps border-b border-stone/40 pb-1 text-stone/80 hover:text-petrol-300"
-            >
-              Full Ooty Guide
-            </Link>
           </div>
           <div className="mt-12">
             <ExploreOotyPanel images={siteImages.ooty} />
