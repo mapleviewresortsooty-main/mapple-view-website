@@ -1,4 +1,5 @@
 import { stockImages } from "@/lib/stockImages";
+import { attractions } from "@/lib/ooty";
 
 // Registry of every image slot on the public site that the /adminimage page
 // can manage. Each entry is one visual section; `max` caps how many images a
@@ -39,6 +40,12 @@ export const SITE_IMAGE_SECTIONS = [
     hint: "Extra frames in the gallery grid (section 06). Room photos there come from each room's own images.",
   },
   {
+    key: "ooty",
+    label: "Ooty attractions",
+    page: "Home · Explore Ooty",
+    hint: "Photos pair with destinations by position — photo 1 is Ooty Lake, photo 2 is Doddabetta Peak, and so on.",
+  },
+  {
     key: "social",
     label: "Instagram strip",
     page: "Home",
@@ -74,6 +81,7 @@ export const SITE_IMAGE_DEFAULTS: Record<SiteImageKey, string[]> = {
     stockImages.gallery.facade,
   ],
   social: [...stockImages.social],
+  ooty: attractions.map((a) => a.image),
   cta: [stockImages.timeline[4]],
 };
 

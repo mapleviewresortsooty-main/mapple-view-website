@@ -263,7 +263,7 @@ export default async function HomePage() {
             </Link>
           </div>
           <div className="mt-12">
-            <ExploreOotyPanel />
+            <ExploreOotyPanel images={siteImages.ooty} />
           </div>
           <div className="mt-10 grid grid-cols-1 gap-6 border-t border-stone/15 pt-10 sm:grid-cols-3">
             {seasons.map((s) => (

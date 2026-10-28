@@ -52,6 +52,16 @@ body {
   color: var(--color-ink);
 }
 
+/* Crossfade used when an image slot swaps (e.g. the Ooty attractions panel). */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 /* Small-caps overline label used throughout for "SECTION 0X // NAME" style
    eyebrows above headings — the recurring editorial signature of the new
    design reference. */

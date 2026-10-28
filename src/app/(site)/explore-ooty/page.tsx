@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { LinkButton } from "@/components/ui/Button";
 import SectionLabel from "@/components/site/SectionLabel";
 import { attractions, seasons } from "@/lib/ooty";
+import { getSiteImages } from "@/lib/site-data";
 
 export const metadata: Metadata = {
   title: "Explore Ooty & the Nilgiris | Mapple View Resort",
 };
 
-export default function ExploreOotyPage() {
+export default async function ExploreOotyPage() {
+  const siteImages = await getSiteImages();
   return (
     <div>
       <section className="bg-charcoal py-20 text-center text-stone">
@@ -29,9 +32,18 @@ export default function ExploreOotyPage() {
           Around Ooty &amp; the Nilgiri Hills
         </h2>
         <div className="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          {attractions.map((a) => (
-            <div key={a.title} className="border-t border-petrol-100 pt-4">
-              <h3 className="font-display text-lg font-medium text-ink">{a.title}</h3>
+          {attractions.map((a, i) => (
+            <div key={a.title} className="group">
+              <div className="relative aspect-[16/10] overflow-hidden bg-petrol-100">
+                <Image
+                  src={siteImages.ooty[i] ?? a.image}
+                  alt={a.title}
+                  fill
+                  sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                  className="object-cover transition duration-500 group-hover:scale-105"
+                />
+              </div>
+              <h3 className="mt-4 font-display text-lg font-medium text-ink">{a.title}</h3>
               <span className="label-caps mt-1 block text-petrol-500">{a.proximity}</span>
               <p className="mt-2 text-sm font-light leading-relaxed text-ink/70">{a.desc}</p>
             </div>

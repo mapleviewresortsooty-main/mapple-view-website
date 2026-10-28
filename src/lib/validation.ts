@@ -147,6 +147,7 @@ export const siteImagesUpdateSchema = z.object({
     "gallery",
     "social",
     "cta",
+    "ooty",
   ]),
   images: z.array(z.string().trim().min(1).max(500)).max(24),
 });
