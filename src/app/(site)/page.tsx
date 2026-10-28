@@ -20,7 +20,9 @@ const EthosDepthCarousel = dynamic(() => import("@/components/site/EthosDepthCar
   ),
 });
 const RoomShowcase = dynamic(() => import("@/components/site/RoomShowcase"));
-const WakeUpHereTimeline = dynamic(() => import("@/components/site/WakeUpHereTimeline"));
+// "Wake Up Here" section hidden for now — restore by uncommenting this line
+// and its section block below.
+// const WakeUpHereTimeline = dynamic(() => import("@/components/site/WakeUpHereTimeline"));
 const ExploreOotyPanel = dynamic(() => import("@/components/site/ExploreOotyPanel"));
 const PanoramicDrag = dynamic(() => import("@/components/site/PanoramicDrag"));
 const GalleryGrid = dynamic(() => import("@/components/site/GalleryGrid"));
@@ -223,6 +225,8 @@ export default async function HomePage() {
       )}
 
       {/* ========================= 03 · WAKE UP HERE ========================= */}
+      {/* Hidden for now — restore by uncommenting this block and the dynamic
+          import above.
       <section className="bg-petrol-50/50 py-16 sm:py-20">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <div className="mx-auto max-w-2xl text-center">
@@ -239,6 +243,7 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+      */}
 
       {/* ========================= 04 · EXPLORE OOTY ========================= */}
       <section className="bg-charcoal py-16 text-stone sm:py-20">
