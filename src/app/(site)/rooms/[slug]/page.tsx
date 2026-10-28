@@ -48,7 +48,7 @@ export default async function RoomDetailPage({
           </div>
 
           {room.images.length > 1 && (
-            <div className="mt-4 grid grid-cols-4 gap-3">
+            <div className="mt-4 grid grid-cols-3 gap-3 sm:grid-cols-5">
               {room.images.slice(1).map((img, i) => (
                 <div
                   key={i}

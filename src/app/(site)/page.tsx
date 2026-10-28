@@ -15,7 +15,7 @@ import type { GalleryItem } from "@/components/site/GalleryGrid";
 
 const EthosDepthCarousel = dynamic(() => import("@/components/site/EthosDepthCarousel"), {
   loading: () => (
-    <div className="h-[400px] w-full animate-pulse bg-petrol-100 sm:h-[420px]" />
+    <div className="h-[300px] w-full animate-pulse bg-petrol-100 sm:h-[420px]" />
   ),
 });
 const RoomShowcase = dynamic(() => import("@/components/site/RoomShowcase"));
@@ -115,7 +115,7 @@ export default async function HomePage() {
   ];
 
   return (
-    <div>
+    <div className="flex flex-col">
       {/* ============================= HERO ============================= */}
       <section className="relative isolate flex min-h-[100svh] flex-col justify-between overflow-hidden text-stone md:min-h-[92vh]">
         <Image
@@ -173,7 +173,9 @@ export default async function HomePage() {
       </section>
 
       {/* ========================= 01 · THE ESCAPE ========================= */}
-      <section className="bg-white">
+      {/* order-* classes reorder sections on phones only (rooms first);        */}
+      {/* md:order-none restores DOM order from tablet up.                     */}
+      <section className="order-2 bg-white md:order-none">
         <div className="mx-auto grid max-w-6xl gap-10 px-4 pt-20 pb-10 sm:gap-12 sm:px-6 sm:pt-28 sm:pb-12 lg:grid-cols-12">
           <Reveal className="lg:col-span-5">
             <SectionLabel index="01" eyebrow="Sanctuary Ethos" />
@@ -205,7 +207,7 @@ export default async function HomePage() {
 
       {/* ========================= 02 · ROOMS ========================= */}
       {rooms.length > 0 && (
-        <section id="rooms" className="mx-auto max-w-6xl scroll-mt-20 px-4 pt-10 pb-16 sm:px-6 sm:pt-12 sm:pb-20">
+        <section id="rooms" className="order-1 mx-auto max-w-6xl scroll-mt-20 px-4 pt-10 pb-16 sm:px-6 sm:pt-12 sm:pb-20 md:order-none">
           <Reveal className="flex flex-wrap items-end justify-between gap-4">
             <div>
               <SectionLabel index="02" eyebrow="Accommodation Portfolio" />
@@ -217,7 +219,7 @@ export default async function HomePage() {
               View All Rooms
             </LinkButton>
           </Reveal>
-          <div className="mt-14">
+          <div className="mt-10 sm:mt-14">
             <RoomShowcase rooms={rooms} whatsappNumber={settings.whatsapp_owner_number} />
           </div>
         </section>
@@ -245,7 +247,7 @@ export default async function HomePage() {
       */}
 
       {/* ========================= 04 · EXPLORE OOTY ========================= */}
-      <section className="bg-charcoal py-16 text-stone sm:py-20">
+      <section className="order-3 bg-charcoal py-16 text-stone sm:py-20 md:order-none">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
@@ -270,7 +272,7 @@ export default async function HomePage() {
       </section>
 
       {/* ========================= 05 · THE VIEW ========================= */}
-      <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
+      <section className="order-3 mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20 md:order-none">
         <SectionLabel index="05" eyebrow="Unfiltered Perspective" />
         <h2 className="mt-5 max-w-xl font-display text-3xl font-normal text-ink sm:text-4xl">
           Some views don&apos;t need a filter.
@@ -281,7 +283,7 @@ export default async function HomePage() {
       </section>
 
       {/* ========================= 06 · GALLERY ========================= */}
-      <section className="bg-petrol-50/50 py-16 sm:py-20">
+      <section className="order-3 bg-petrol-50/50 py-16 sm:py-20 md:order-none">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <SectionLabel index="06" eyebrow="The Visual Journal" />
           <h2 className="mt-5 font-display text-3xl font-normal text-ink sm:text-4xl">
@@ -298,7 +300,7 @@ export default async function HomePage() {
       </section>
 
       {/* ========================= 07 · FAQ ========================= */}
-      <section className="bg-white py-16 sm:py-20">
+      <section className="order-3 bg-white py-16 sm:py-20 md:order-none">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <SectionLabel index="07" eyebrow="Good to Know" />
           <h2 className="mt-5 font-display text-3xl font-normal text-ink sm:text-4xl">
@@ -312,7 +314,7 @@ export default async function HomePage() {
 
       {/* ========================= 08 · GUEST MOMENTS ========================= */}
       {settings.testimonials.trim() && (
-        <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
+        <section className="order-3 mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20 md:order-none">
           <SectionLabel index="08" eyebrow="Guest Moments" />
           <h2 className="mt-5 font-display text-3xl font-normal text-ink sm:text-4xl">
             In Their Own Words
@@ -324,7 +326,7 @@ export default async function HomePage() {
       )}
 
       {/* ========================= 09 · LOCATION ========================= */}
-      <section className="bg-petrol-50/50 py-16 sm:py-20">
+      <section className="order-3 bg-petrol-50/50 py-16 sm:py-20 md:order-none">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <SectionLabel index="09" eyebrow="Arrival & Access" />
           <h2 className="mt-5 font-display text-3xl font-normal text-ink sm:text-4xl">
@@ -338,7 +340,7 @@ export default async function HomePage() {
 
       {/* ========================= SOCIAL (optional) ========================= */}
       {settings.instagram_handle && (
-        <section className="mx-auto max-w-4xl px-4 py-16 text-center sm:px-6">
+        <section className="order-3 mx-auto max-w-4xl px-4 py-16 text-center sm:px-6 md:order-none">
           <span className="label-caps text-petrol-500">Estate Dispatches</span>
           <a
             href={`https://instagram.com/${settings.instagram_handle.replace(/^@/, "")}`}
@@ -348,10 +350,10 @@ export default async function HomePage() {
           >
             @{settings.instagram_handle.replace(/^@/, "")}
           </a>
-          <div className="mx-auto mt-8 grid max-w-2xl grid-cols-4 gap-3">
+          <div className="mx-auto mt-8 grid max-w-2xl grid-cols-2 gap-3 sm:grid-cols-4">
             {siteImages.social.map((src) => (
               <div key={src} className="relative aspect-square overflow-hidden bg-petrol-100">
-                <Image src={src} alt="" fill sizes="120px" className="object-cover" />
+                <Image src={src} alt="" fill sizes="(min-width: 640px) 120px, 45vw" className="object-cover" />
               </div>
             ))}
           </div>
@@ -359,7 +361,7 @@ export default async function HomePage() {
       )}
 
       {/* =============================== FINAL CTA =============================== */}
-      <section className="relative overflow-hidden bg-charcoal text-stone">
+      <section className="relative order-3 overflow-hidden bg-charcoal text-stone md:order-none">
         <Image
           src={siteImages.cta[0] || stockImages.timeline[4]}
           alt=""
@@ -377,8 +379,8 @@ export default async function HomePage() {
           <p className="mx-auto mt-5 max-w-xl font-light leading-relaxed text-stone/75">
             Reserve your room today and let us take care of the rest.
           </p>
-          <div className="mt-10 flex flex-wrap justify-center gap-4">
-            <LinkButton href="/rooms" variant="accent">
+          <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:justify-center sm:gap-4">
+            <LinkButton href="/rooms" variant="accent" className="w-full justify-center sm:w-auto">
               Check Availability
             </LinkButton>
             {settings.whatsapp_owner_number && (
@@ -386,7 +388,7 @@ export default async function HomePage() {
                 href={`https://wa.me/${settings.whatsapp_owner_number.replace(/\D/g, "")}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="label-caps inline-flex items-center justify-center gap-2 border border-stone/40 px-7 py-3.5 text-stone transition hover:bg-stone hover:text-ink"
+                className="label-caps inline-flex w-full items-center justify-center gap-2 border border-stone/40 px-7 py-3.5 text-stone transition hover:bg-stone hover:text-ink sm:w-auto"
               >
                 <Icon name="chat" className="text-base" />
                 WhatsApp Us
@@ -396,7 +398,7 @@ export default async function HomePage() {
               href={mapsDirectionsUrl()}
               target="_blank"
               rel="noopener noreferrer"
-              className="label-caps inline-flex items-center justify-center gap-2 border border-stone/40 px-7 py-3.5 text-stone transition hover:bg-stone hover:text-ink"
+              className="label-caps inline-flex w-full items-center justify-center gap-2 border border-stone/40 px-7 py-3.5 text-stone transition hover:bg-stone hover:text-ink sm:w-auto"
             >
               <Icon name="directions" className="text-base" />
               Get Directions

@@ -15,7 +15,7 @@ export default function EthosDepthCarousel({ images }: { images: string[] }) {
     alt: alts[i] ?? "Mapple View Resort",
   }));
   return (
-    <div className="relative h-[400px] w-full sm:h-[420px]">
+    <div className="relative h-[300px] w-full sm:h-[420px]">
       <DepthCarousel
         items={items}
         cardWidth={280}

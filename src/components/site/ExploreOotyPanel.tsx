@@ -12,7 +12,33 @@ export default function ExploreOotyPanel({ images }: { images: string[] }) {
 
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
-      <div className="flex flex-col gap-2 lg:col-span-5">
+      {/* Horizontally scrollable strip on phones; vertical list on desktop */}
+      <div className="-mx-4 overflow-x-auto px-4 pb-1 lg:hidden">
+        <div className="flex w-max gap-2">
+          {attractions.map((a, i) => {
+            const isActive = i === active;
+            return (
+              <button
+                key={a.title}
+                type="button"
+                onClick={() => setActive(i)}
+                className={`flex shrink-0 items-center gap-2 whitespace-nowrap border px-4 py-3 transition-colors ${
+                  isActive
+                    ? "border-petrol-300 bg-stone text-ink"
+                    : "border-stone/25 text-stone/80 hover:text-stone"
+                }`}
+              >
+                <Icon
+                  name={a.icon}
+                  className={`text-lg ${isActive ? "text-petrol-500" : "text-petrol-300"}`}
+                />
+                <span className="text-sm font-medium">{a.title}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+      <div className="hidden flex-col gap-2 lg:col-span-5 lg:flex">
         {attractions.map((a, i) => {
           const isActive = i === active;
           return (
