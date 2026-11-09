@@ -14,7 +14,7 @@ declare global {
 }
 
 /** Bump when runMigration gains new required steps (indexes, columns, etc.). */
-const SCHEMA_VERSION = 17;
+const SCHEMA_VERSION = 18;
 
 // Lazy: Next.js's build-time "collecting page data" step imports every API
 // route module (including this one, transitively) just to inspect its
@@ -740,6 +740,15 @@ async function runMigration() {
         "/room-photos/living-4.jpg",
       ]),
     ]
+  );
+
+  // Try the furnished-balcony photo as the hero. The built-in default is
+  // unchanged, so resetting the hero section in /adminimage restores the
+  // original look instantly.
+  await sql.query(
+    `INSERT INTO site_images (section, images, updated_at) VALUES ('hero', $1, now())
+     ON CONFLICT (section) DO UPDATE SET images = EXCLUDED.images, updated_at = now()`,
+    [JSON.stringify(["/room-photos/living-4.jpg"])]
   );
 
   // Correct known-wrong placeholder addresses (e.g. Mussoorie) and align
