@@ -14,7 +14,7 @@ declare global {
 }
 
 /** Bump when runMigration gains new required steps (indexes, columns, etc.). */
-const SCHEMA_VERSION = 13;
+const SCHEMA_VERSION = 14;
 
 // Lazy: Next.js's build-time "collecting page data" step imports every API
 // route module (including this one, transitively) just to inspect its
@@ -622,6 +622,51 @@ async function runMigration() {
       JSON.stringify(deluxeDoublePhotos),
       JSON.stringify([
         "First Floor",
+        "Geyser",
+        "Cupboard",
+        "Kettle",
+        "LED Android TV",
+        "Free Wi-Fi",
+        "Room Service",
+        "Toiletries",
+      ]),
+    ]
+  );
+
+  // Fifth room gets its real listing — Deluxe Quad with mountain-view
+  // balcony. Four photos replace the placeholder gallery.
+  const deluxeQuadPhotos = [
+    "/room-photos/deluxe-quad-1.jpg",
+    "/room-photos/deluxe-quad-2.jpg",
+    "/room-photos/deluxe-quad-3.jpg",
+    "/room-photos/deluxe-quad-4.jpg",
+  ];
+  await sql.query(
+    `UPDATE rooms SET
+       name = 'Deluxe Quad',
+       slug = CASE
+         WHEN EXISTS (
+           SELECT 1 FROM rooms r2
+           WHERE r2.slug = 'deluxe-quad' AND r2.id <> rooms.id
+         ) THEN slug
+         ELSE 'deluxe-quad'
+       END,
+       summary = 'Spacious first-floor room for families and groups — two double beds and a mountain-view balcony.',
+       description = 'Enjoy a relaxing stay in this spacious first-floor room, featuring two comfortable double beds and a private balcony overlooking the beautiful Nilgiri mountains. Step out onto the balcony to enjoy the refreshing mountain breeze, scenic surroundings and beautiful sunrise views with your morning tea.\n\nIdeal for families and groups of friends, this room comfortably accommodates up to 4 adults, offering a perfect combination of space, comfort and a memorable mountain-view experience.',
+       price_per_night = 2999,
+       weekend_price_per_night = 3500,
+       max_guests = 4,
+       bed_type = '2 Double Beds',
+       amenities = $2,
+       images = $1
+     WHERE id = (SELECT id FROM rooms ORDER BY sort_order LIMIT 1 OFFSET 4)`,
+    [
+      JSON.stringify(deluxeQuadPhotos),
+      JSON.stringify([
+        "First Floor",
+        "Private Balcony with Mountain View",
+        "Sunrise Views from Balcony",
+        "Two Double Beds",
         "Geyser",
         "Cupboard",
         "Kettle",
