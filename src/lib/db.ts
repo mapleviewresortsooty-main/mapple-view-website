@@ -14,7 +14,7 @@ declare global {
 }
 
 /** Bump when runMigration gains new required steps (indexes, columns, etc.). */
-const SCHEMA_VERSION = 8;
+const SCHEMA_VERSION = 9;
 
 // Lazy: Next.js's build-time "collecting page data" step imports every API
 // route module (including this one, transitively) just to inspect its
@@ -470,7 +470,7 @@ async function runMigration() {
   ];
   await sql.query(
     `UPDATE rooms SET
-       name = 'Standard Double / Twin Room',
+       name = 'Standard Double',
        slug = CASE
          WHEN EXISTS (
            SELECT 1 FROM rooms r2
