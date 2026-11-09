@@ -14,7 +14,7 @@ declare global {
 }
 
 /** Bump when runMigration gains new required steps (indexes, columns, etc.). */
-const SCHEMA_VERSION = 12;
+const SCHEMA_VERSION = 13;
 
 // Lazy: Next.js's build-time "collecting page data" step imports every API
 // route module (including this one, transitively) just to inspect its
@@ -580,6 +580,48 @@ async function runMigration() {
         "Private Balcony with Mountain View",
         "Sunrise Views from Balcony",
         "Double Bed",
+        "Geyser",
+        "Cupboard",
+        "Kettle",
+        "LED Android TV",
+        "Free Wi-Fi",
+        "Room Service",
+        "Toiletries",
+      ]),
+    ]
+  );
+
+  // Fourth room gets its real listing — Deluxe Double Room, first floor,
+  // non-balcony. Four room photos replace the placeholder gallery.
+  const deluxeDoublePhotos = [
+    "/room-photos/deluxe-double-room-1.jpg",
+    "/room-photos/deluxe-double-room-2.jpg",
+    "/room-photos/deluxe-double-room-3.jpg",
+    "/room-photos/deluxe-double-room-4.jpg",
+  ];
+  await sql.query(
+    `UPDATE rooms SET
+       name = 'Deluxe Double Room',
+       slug = CASE
+         WHEN EXISTS (
+           SELECT 1 FROM rooms r2
+           WHERE r2.slug = 'deluxe-double-room' AND r2.id <> rooms.id
+         ) THEN slug
+         ELSE 'deluxe-double-room'
+       END,
+       summary = 'Cosy first-floor room (non-balcony) designed for couples and solo travellers.',
+       description = 'Enjoy a comfortable and relaxing stay in this cosy first-floor room, thoughtfully designed for couples and solo travellers. Featuring a comfortable double bed and warm interiors, the room offers a peaceful atmosphere for guests looking to unwind after exploring the beautiful hill station of Ooty.\n\nWith essential modern amenities and a welcoming ambience, it is an ideal choice for travellers seeking comfort, convenience and value for money.',
+       price_per_night = 1799,
+       weekend_price_per_night = 2250,
+       max_guests = 2,
+       bed_type = 'Double Bed',
+       amenities = $2,
+       images = $1
+     WHERE id = (SELECT id FROM rooms ORDER BY sort_order LIMIT 1 OFFSET 3)`,
+    [
+      JSON.stringify(deluxeDoublePhotos),
+      JSON.stringify([
+        "First Floor",
         "Geyser",
         "Cupboard",
         "Kettle",

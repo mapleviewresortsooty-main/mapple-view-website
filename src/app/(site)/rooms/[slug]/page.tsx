@@ -54,11 +54,16 @@ export default async function RoomDetailPage({
                 {room.bed_type}
               </span>
             )}
-            {room.amenities.includes("Ground Floor") && (
-              <span className="rounded-full bg-petrol-50 px-3 py-1">
-                Ground floor
-              </span>
-            )}
+            {(() => {
+              const floor = room.amenities.find((a) =>
+                /^(ground|first|second|third) floor$/i.test(a)
+              );
+              return floor ? (
+                <span className="rounded-full bg-petrol-50 px-3 py-1">
+                  {floor}
+                </span>
+              ) : null;
+            })()}
           </div>
 
           <p className="mt-6 whitespace-pre-line leading-relaxed text-ink/80">
