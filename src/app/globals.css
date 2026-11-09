@@ -46,6 +46,14 @@
   --font-mono: var(--font-plex-mono);
 }
 
+html {
+  /* Safety net: a single over-wide element can otherwise stretch the whole
+     page and leave a dead strip at the right edge on mobile. `clip` (unlike
+     `hidden`) doesn't create a scroll container, so sticky headers keep
+     working. */
+  overflow-x: clip;
+}
+
 body {
   position: relative;
   background: var(--color-stone);
