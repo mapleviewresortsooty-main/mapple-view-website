@@ -14,7 +14,7 @@ declare global {
 }
 
 /** Bump when runMigration gains new required steps (indexes, columns, etc.). */
-const SCHEMA_VERSION = 6;
+const SCHEMA_VERSION = 7;
 
 // Lazy: Next.js's build-time "collecting page data" step imports every API
 // route module (including this one, transitively) just to inspect its
@@ -460,6 +460,7 @@ async function runMigration() {
     "/room-photos/standard-double-3.jpg",
     "/room-photos/standard-double-4.jpg",
     "/room-photos/standard-double-5.jpg",
+    "/room-photos/standard-double-6.jpg",
   ];
   await sql.query(
     `UPDATE rooms SET
