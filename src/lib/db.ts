@@ -14,7 +14,7 @@ declare global {
 }
 
 /** Bump when runMigration gains new required steps (indexes, columns, etc.). */
-const SCHEMA_VERSION = 9;
+const SCHEMA_VERSION = 10;
 
 // Lazy: Next.js's build-time "collecting page data" step imports every API
 // route module (including this one, transitively) just to inspect its
@@ -490,6 +490,49 @@ async function runMigration() {
     [
       JSON.stringify(standardDoublePhotos),
       JSON.stringify([
+        "Geyser",
+        "Cupboard",
+        "Kettle",
+        "LED Android TV",
+        "Free Wi-Fi",
+        "Room Service",
+        "Toiletries",
+      ]),
+    ]
+  );
+
+  // Second room gets its real listing — Deluxe Queen Suite with the three
+  // balcony-view photos replacing the placeholder gallery.
+  const deluxeQueenPhotos = [
+    "/room-photos/deluxe-queen-suite-1.jpg",
+    "/room-photos/deluxe-queen-suite-2.jpg",
+    "/room-photos/deluxe-queen-suite-3.jpg",
+  ];
+  await sql.query(
+    `UPDATE rooms SET
+       name = 'Deluxe Queen Suite',
+       slug = CASE
+         WHEN EXISTS (
+           SELECT 1 FROM rooms r2
+           WHERE r2.slug = 'deluxe-queen-suite' AND r2.id <> rooms.id
+         ) THEN slug
+         ELSE 'deluxe-queen-suite'
+       END,
+       summary = 'Spacious ground-floor suite with two double beds and a private balcony overlooking the Nilgiris.',
+       description = 'Wake up to beautiful mountain views of the Nilgiris! Located on the ground floor, this spacious room features two comfortable double beds and a private balcony overlooking the mountains. Guests can relax on the balcony, enjoy the fresh mountain air and experience beautiful sunrise views with a cup of tea.\n\nIdeal for families and small groups, the room comfortably accommodates up to 4 adults, offering a peaceful and relaxing stay at Mapple View Resort, Lovedale, Ooty.',
+       price_per_night = 2999,
+       weekend_price_per_night = 3500,
+       max_guests = 4,
+       bed_type = '2 Double Beds',
+       amenities = $2,
+       images = $1
+     WHERE id = (SELECT id FROM rooms ORDER BY sort_order LIMIT 1 OFFSET 1)`,
+    [
+      JSON.stringify(deluxeQueenPhotos),
+      JSON.stringify([
+        "Private Balcony with Mountain View",
+        "Sunrise Views from Balcony",
+        "Two Double Beds",
         "Geyser",
         "Cupboard",
         "Kettle",
