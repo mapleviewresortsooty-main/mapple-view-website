@@ -94,18 +94,17 @@ export default async function HomePage() {
     <div className="flex flex-col">
       {/* ============================= HERO ============================= */}
       <section className="relative isolate flex min-h-[100svh] flex-col justify-between overflow-hidden text-stone md:min-h-[92vh]">
-        {/* On phones the image renders 30% taller than the hero, anchored to
-            the bottom — that pulls the photo's lower portion into frame
-            (object-position alone can't crop vertically with object-cover). */}
+        {/* Mobile anchor 58.5% horizontal — the settled framing. The photo's
+            full height already covers the portrait hero, so vertical
+            positioning can't reveal more of the bottom without zooming. */}
         <Image
           src={siteImages.hero[0] || stockImages.heroBg}
           alt=""
-          width={1600}
-          height={1067}
+          fill
           priority
           quality={75}
           sizes="100vw"
-          className="absolute inset-x-0 bottom-0 h-[130%] w-full object-cover object-[58.5%_50%] sm:inset-0 sm:h-full sm:object-center"
+          className="object-cover object-[58.5%_50%] sm:object-center"
         />
         {/* Lighter wash on mobile so the landscape reads; deepen from sm up for type */}
         <div className="absolute inset-0 bg-gradient-to-t from-charcoal/85 via-charcoal/25 to-charcoal/10 sm:from-charcoal sm:via-charcoal/55 sm:to-charcoal/40" />
