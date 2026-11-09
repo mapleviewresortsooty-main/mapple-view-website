@@ -6,20 +6,28 @@ import Icon from "@/components/ui/Icon";
 
 export type GalleryItem = {
   id: string;
-  category: "rooms" | "views";
+  category: string;
   src: string;
   caption: string;
   span?: "wide" | "tall" | "normal";
 };
 
-const categories = [
+export type GalleryCategory = { key: string; label: string };
+
+const DEFAULT_CATEGORIES: GalleryCategory[] = [
   { key: "all", label: "All" },
   { key: "rooms", label: "Rooms" },
   { key: "views", label: "Mountain Views" },
-] as const;
+];
 
-export default function GalleryGrid({ items }: { items: GalleryItem[] }) {
-  const [filter, setFilter] = useState<(typeof categories)[number]["key"]>("all");
+export default function GalleryGrid({
+  items,
+  categories = DEFAULT_CATEGORIES,
+}: {
+  items: GalleryItem[];
+  categories?: GalleryCategory[];
+}) {
+  const [filter, setFilter] = useState("all");
   const [lightbox, setLightbox] = useState<GalleryItem | null>(null);
 
   const visible = filter === "all" ? items : items.filter((i) => i.category === filter);

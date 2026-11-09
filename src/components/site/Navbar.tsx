@@ -6,6 +6,7 @@ export default async function Navbar() {
 
   const links = [
     { href: "/rooms", label: "The Rooms" },
+    { href: "/gallery", label: "Gallery" },
     { href: "/about", label: "About" },
     { href: "/contact", label: "Contact" },
   ];

@@ -3,7 +3,7 @@ import dynamic from "next/dynamic";
 import { LinkButton } from "@/components/ui/Button";
 import Icon from "@/components/ui/Icon";
 import SectionLabel from "@/components/site/SectionLabel";
-import { stockImages, stockRoomImage } from "@/lib/stockImages";
+import { stockImages } from "@/lib/stockImages";
 import HeroBookingBar from "@/components/site/HeroBookingBar";
 import Testimonials from "@/components/site/Testimonials";
 import LocationSection from "@/components/site/LocationSection";
@@ -11,7 +11,6 @@ import Reveal from "@/components/site/Reveal";
 import { getActiveRooms, getSiteSettings, getSiteImages } from "@/lib/site-data";
 import { seasons } from "@/lib/ooty";
 import { mapsDirectionsUrl, RESORT_LOCATION } from "@/lib/location";
-import type { GalleryItem } from "@/components/site/GalleryGrid";
 
 const EthosDepthCarousel = dynamic(() => import("@/components/site/EthosDepthCarousel"), {
   loading: () => (
@@ -24,7 +23,6 @@ const RoomShowcase = dynamic(() => import("@/components/site/RoomShowcase"));
 // const WakeUpHereTimeline = dynamic(() => import("@/components/site/WakeUpHereTimeline"));
 const ExploreOotyPanel = dynamic(() => import("@/components/site/ExploreOotyPanel"));
 const PanoramicDrag = dynamic(() => import("@/components/site/PanoramicDrag"));
-const GalleryGrid = dynamic(() => import("@/components/site/GalleryGrid"));
 const FaqAccordion = dynamic(() => import("@/components/site/FaqAccordion"));
 
 const ethos = [
@@ -48,12 +46,6 @@ const ethos = [
     title: "Instant Confirmation",
     desc: "Your booking request reaches us instantly via WhatsApp for a quick response.",
   },
-];
-
-const viewCaptions = [
-  "Morning light over the tea ridge",
-  "A quiet corner, view included",
-  "The estate, from the driveway",
 ];
 
 export default async function HomePage() {
@@ -96,22 +88,6 @@ export default async function HomePage() {
       q: "How do I get to Mapple View Resort?",
       a: "We're in Lovedale, on the outskirts of Ooty. See the Location section below for directions, or our About page for a fuller guide on getting here.",
     },
-  ];
-
-  const galleryItems: GalleryItem[] = [
-    ...allRooms.map((r, i) => ({
-      id: `${r.id}-0`,
-      category: "rooms" as const,
-      src: r.images[0] || stockRoomImage(i),
-      caption: r.name,
-      span: i === 0 ? ("wide" as const) : undefined,
-    })),
-    ...siteImages.gallery.map((src, i) => ({
-      id: `view-${i}`,
-      category: "views" as const,
-      src,
-      caption: viewCaptions[i] ?? "Mapple View Resort",
-    })),
   ];
 
   return (
@@ -282,27 +258,13 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ========================= 06 · GALLERY ========================= */}
-      <section className="order-3 bg-petrol-50/50 py-16 sm:py-20 md:order-none">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <SectionLabel index="06" eyebrow="The Visual Journal" />
-          <h2 className="mt-5 font-display text-3xl font-normal text-ink sm:text-4xl">
-            Curated Estate Frames
-          </h2>
-          <p className="mt-3 max-w-xl text-sm font-light text-ink/70">
-            Real room photos as they&apos;re added, alongside placeholder Nilgiri imagery in the
-            meantime.
-          </p>
-          <div className="mt-10">
-            <GalleryGrid items={galleryItems} />
-          </div>
-        </div>
-      </section>
+      {/* "Curated Estate Frames" section removed — the photos now live on   */}
+      {/* the /gallery page (top nav), grouped by Rooms and Shared Spaces.   */}
 
-      {/* ========================= 07 · FAQ ========================= */}
+      {/* ========================= 06 · FAQ ========================= */}
       <section className="order-3 bg-white py-16 sm:py-20 md:order-none">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <SectionLabel index="07" eyebrow="Good to Know" />
+          <SectionLabel index="06" eyebrow="Good to Know" />
           <h2 className="mt-5 font-display text-3xl font-normal text-ink sm:text-4xl">
             Frequently Asked Questions
           </h2>
@@ -312,10 +274,10 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ========================= 08 · GUEST MOMENTS ========================= */}
+      {/* ========================= 07 · GUEST MOMENTS ========================= */}
       {settings.testimonials.trim() && (
         <section className="order-3 mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20 md:order-none">
-          <SectionLabel index="08" eyebrow="Guest Moments" />
+          <SectionLabel index="07" eyebrow="Guest Moments" />
           <h2 className="mt-5 font-display text-3xl font-normal text-ink sm:text-4xl">
             In Their Own Words
           </h2>
@@ -325,10 +287,10 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* ========================= 09 · LOCATION ========================= */}
+      {/* ========================= 08 · LOCATION ========================= */}
       <section className="order-3 bg-petrol-50/50 py-16 sm:py-20 md:order-none">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <SectionLabel index="09" eyebrow="Arrival & Access" />
+          <SectionLabel index="08" eyebrow="Arrival & Access" />
           <h2 className="mt-5 font-display text-3xl font-normal text-ink sm:text-4xl">
             Find Mapple View Resort
           </h2>
