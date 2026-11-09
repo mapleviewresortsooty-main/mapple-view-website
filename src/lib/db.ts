@@ -14,7 +14,7 @@ declare global {
 }
 
 /** Bump when runMigration gains new required steps (indexes, columns, etc.). */
-const SCHEMA_VERSION = 11;
+const SCHEMA_VERSION = 12;
 
 // Lazy: Next.js's build-time "collecting page data" step imports every API
 // route module (including this one, transitively) just to inspect its
@@ -535,6 +535,51 @@ async function runMigration() {
         "Private Balcony with Mountain View",
         "Sunrise Views from Balcony",
         "Two Double Beds",
+        "Geyser",
+        "Cupboard",
+        "Kettle",
+        "LED Android TV",
+        "Free Wi-Fi",
+        "Room Service",
+        "Toiletries",
+      ]),
+    ]
+  );
+
+  // Third room gets its real listing — Deluxe Queen with the four
+  // balcony/mountain photos replacing the placeholder gallery.
+  const deluxeQueenRoomPhotos = [
+    "/room-photos/deluxe-queen-room-1.jpg",
+    "/room-photos/deluxe-queen-room-2.jpg",
+    "/room-photos/deluxe-queen-room-3.jpg",
+    "/room-photos/deluxe-queen-room-4.jpg",
+  ];
+  await sql.query(
+    `UPDATE rooms SET
+       name = 'Deluxe Queen Room',
+       slug = CASE
+         WHEN EXISTS (
+           SELECT 1 FROM rooms r2
+           WHERE r2.slug = 'deluxe-queen-room' AND r2.id <> rooms.id
+         ) THEN slug
+         ELSE 'deluxe-queen-room'
+       END,
+       summary = 'Cosy ground-floor room with a private balcony overlooking the Nilgiris — made for couples.',
+       description = 'Enjoy a peaceful and comfortable stay in this cosy ground-floor room, featuring a comfortable double bed and a private balcony overlooking the beautiful Nilgiri mountains. Guests can relax on the balcony, breathe in the fresh mountain air and enjoy stunning sunrise views with their morning tea.\n\nIdeal for couples looking for a relaxing getaway, this room offers a perfect blend of comfort, privacy and beautiful natural surroundings.',
+       price_per_night = 2200,
+       weekend_price_per_night = 2500,
+       max_guests = 2,
+       bed_type = 'Double Bed',
+       amenities = $2,
+       images = $1
+     WHERE id = (SELECT id FROM rooms ORDER BY sort_order LIMIT 1 OFFSET 2)`,
+    [
+      JSON.stringify(deluxeQueenRoomPhotos),
+      JSON.stringify([
+        "Ground Floor",
+        "Private Balcony with Mountain View",
+        "Sunrise Views from Balcony",
+        "Double Bed",
         "Geyser",
         "Cupboard",
         "Kettle",
