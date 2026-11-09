@@ -14,7 +14,7 @@ declare global {
 }
 
 /** Bump when runMigration gains new required steps (indexes, columns, etc.). */
-const SCHEMA_VERSION = 15;
+const SCHEMA_VERSION = 16;
 
 // Lazy: Next.js's build-time "collecting page data" step imports every API
 // route module (including this one, transitively) just to inspect its
@@ -719,6 +719,21 @@ async function runMigration() {
         "Free Wi-Fi",
         "Room Service",
         "Toiletries",
+      ]),
+    ]
+  );
+
+  // "Above the noise" carousel switches to real room photography — room 3's
+  // first two photos, then room 6's first and room 5's second.
+  await sql.query(
+    `INSERT INTO site_images (section, images, updated_at) VALUES ('ethos', $1, now())
+     ON CONFLICT (section) DO UPDATE SET images = EXCLUDED.images, updated_at = now()`,
+    [
+      JSON.stringify([
+        "/room-photos/deluxe-queen-room-1.jpg",
+        "/room-photos/deluxe-queen-room-2.jpg",
+        "/room-photos/deluxe-double-balcony-1.jpg",
+        "/room-photos/deluxe-quad-2.jpg",
       ]),
     ]
   );

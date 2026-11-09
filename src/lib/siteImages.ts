@@ -75,10 +75,10 @@ export type SiteImageKey = (typeof SITE_IMAGE_SECTIONS)[number]["key"];
 export const SITE_IMAGE_DEFAULTS: Record<SiteImageKey, string[]> = {
   hero: [stockImages.heroBg],
   ethos: [
-    stockImages.escapeTall,
-    stockImages.escapeSquare,
-    stockImages.gallery.sunbeams,
-    stockImages.gallery.facade,
+    "/room-photos/deluxe-queen-room-1.jpg",
+    "/room-photos/deluxe-queen-room-2.jpg",
+    "/room-photos/deluxe-double-balcony-1.jpg",
+    "/room-photos/deluxe-quad-2.jpg",
   ],
   timeline: [...stockImages.timeline],
   panoramic: [stockImages.panoramic],
