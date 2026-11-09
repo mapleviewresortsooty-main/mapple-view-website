@@ -25,13 +25,18 @@ export const RoomModel = {
     return rows.map(mapRoom);
   },
   /** Lightweight rows for the admin calendar grid. */
-  async forCalendar(): Promise<Pick<Room, "id" | "name" | "price_per_night">[]> {
+  async forCalendar(): Promise<
+    Pick<Room, "id" | "name" | "price_per_night" | "weekend_price_per_night">[]
+  > {
     await ensureMigrated();
     return (await sql.query(
-      `SELECT id, name, price_per_night FROM rooms
+      `SELECT id, name, price_per_night, weekend_price_per_night FROM rooms
        WHERE is_active = 1
        ORDER BY sort_order ASC, created_at ASC`
-    )) as Pick<Room, "id" | "name" | "price_per_night">[];
+    )) as Pick<
+      Room,
+      "id" | "name" | "price_per_night" | "weekend_price_per_night"
+    >[];
   },
   /** id → name map for admin tables that only need labels. */
   async idNames(): Promise<{ id: string; name: string }[]> {
@@ -56,6 +61,7 @@ export const RoomModel = {
     summary: string;
     description: string;
     price_per_night: number;
+    weekend_price_per_night?: number;
     max_guests: number;
     bed_type: string;
     size_sqft: number;
@@ -66,8 +72,8 @@ export const RoomModel = {
     await ensureMigrated();
     const id = crypto.randomUUID();
     await sql.query(
-      `INSERT INTO rooms (id, name, slug, summary, description, price_per_night, max_guests, bed_type, size_sqft, images, amenities, sort_order)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)`,
+      `INSERT INTO rooms (id, name, slug, summary, description, price_per_night, weekend_price_per_night, max_guests, bed_type, size_sqft, images, amenities, sort_order)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)`,
       [
         id,
         data.name,
@@ -75,6 +81,7 @@ export const RoomModel = {
         data.summary,
         data.description,
         data.price_per_night,
+        data.weekend_price_per_night ?? 0,
         data.max_guests,
         data.bed_type,
         data.size_sqft,
@@ -93,6 +100,7 @@ export const RoomModel = {
       summary: string;
       description: string;
       price_per_night: number;
+      weekend_price_per_night: number;
       max_guests: number;
       bed_type: string;
       size_sqft: number;
@@ -111,6 +119,8 @@ export const RoomModel = {
       summary: data.summary ?? existing.summary,
       description: data.description ?? existing.description,
       price_per_night: data.price_per_night ?? existing.price_per_night,
+      weekend_price_per_night:
+        data.weekend_price_per_night ?? existing.weekend_price_per_night,
       max_guests: data.max_guests ?? existing.max_guests,
       bed_type: data.bed_type ?? existing.bed_type,
       size_sqft: data.size_sqft ?? existing.size_sqft,
@@ -121,15 +131,16 @@ export const RoomModel = {
     };
     await sql.query(
       `UPDATE rooms SET name=$1, slug=$2, summary=$3, description=$4,
-       price_per_night=$5, max_guests=$6, bed_type=$7, size_sqft=$8,
-       images=$9, amenities=$10, is_active=$11, sort_order=$12,
-       updated_at=now() WHERE id=$13`,
+       price_per_night=$5, weekend_price_per_night=$6, max_guests=$7,
+       bed_type=$8, size_sqft=$9, images=$10, amenities=$11, is_active=$12,
+       sort_order=$13, updated_at=now() WHERE id=$14`,
       [
         merged.name,
         merged.slug,
         merged.summary,
         merged.description,
         merged.price_per_night,
+        merged.weekend_price_per_night,
         merged.max_guests,
         merged.bed_type,
         merged.size_sqft,

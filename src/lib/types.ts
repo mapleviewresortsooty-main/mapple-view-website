@@ -11,6 +11,7 @@ export interface Room {
   summary: string;
   description: string;
   price_per_night: number;
+  weekend_price_per_night: number;
   max_guests: number;
   bed_type: string;
   size_sqft: number;

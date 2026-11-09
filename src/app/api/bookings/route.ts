@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { differenceInCalendarDays } from "date-fns";
 import { RoomModel, BookingModel } from "@/lib/models";
 import { createBookingSchema } from "@/lib/validation";
+import { stayQuote } from "@/lib/pricing";
 
 export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => null);
@@ -48,7 +49,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const totalAmount = nights * room.price_per_night;
+  const totalAmount = stayQuote(room, data.checkIn, data.checkOut).total;
 
   const booking = await BookingModel.create({
     room_id: room.id,

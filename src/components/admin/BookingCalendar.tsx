@@ -16,6 +16,7 @@ import {
 } from "date-fns";
 import type { Booking, BookingStatus, Room } from "@/lib/types";
 import { formatInr } from "@/lib/format";
+import { stayQuote } from "@/lib/pricing";
 import StatusBadge from "@/components/admin/StatusBadge";
 import DateField from "@/components/ui/DateField";
 
@@ -30,7 +31,10 @@ const SOURCE_OPTIONS = [
   "Other",
 ];
 
-type CalendarRoom = Pick<Room, "id" | "name" | "price_per_night">;
+type CalendarRoom = Pick<
+  Room,
+  "id" | "name" | "price_per_night" | "weekend_price_per_night"
+>;
 type CalendarBooking = Pick<
   Booking,
   | "id"
@@ -725,7 +729,7 @@ function CreateBookingModal({
     0,
     differenceInCalendarDays(parseISO(checkOut), parseISO(checkIn))
   );
-  const suggested = nights * room.price_per_night;
+  const suggested = nights > 0 ? stayQuote(room, checkIn, checkOut).total : 0;
 
   const [guestName, setGuestName] = useState("");
   const [guestPhone, setGuestPhone] = useState("");

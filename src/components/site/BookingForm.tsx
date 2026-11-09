@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { differenceInCalendarDays, format, addDays, parseISO, eachDayOfInterval } from "date-fns";
 import { formatInr } from "@/lib/format";
+import { stayQuote } from "@/lib/pricing";
 import type { Room } from "@/lib/types";
 import DateField from "@/components/ui/DateField";
 
@@ -46,7 +47,11 @@ export default function BookingForm({
     0,
     differenceInCalendarDays(new Date(checkOut), new Date(checkIn))
   );
-  const total = nights * room.price_per_night;
+  const quote = useMemo(
+    () => stayQuote(room, checkIn, checkOut),
+    [room, checkIn, checkOut]
+  );
+  const total = quote.total;
 
   // Load ~12 months of availability for this room
   useEffect(() => {
@@ -241,12 +246,26 @@ export default function BookingForm({
       </div>
 
       <div className="mt-6 space-y-1 rounded-xl bg-petrol-50 p-4 text-sm">
-        <div className="flex justify-between text-ink/70">
-          <span>
-            {formatInr(room.price_per_night)} x {nights || 0} night{nights === 1 ? "" : "s"}
-          </span>
-          <span>{formatInr(total)}</span>
-        </div>
+        {quote.regularNights > 0 && (
+          <div className="flex justify-between text-ink/70">
+            <span>
+              {formatInr(room.price_per_night)} x {quote.regularNights} night
+              {quote.regularNights === 1 ? "" : "s"}
+            </span>
+            <span>{formatInr(quote.regularNights * room.price_per_night)}</span>
+          </div>
+        )}
+        {quote.weekendNights > 0 && (
+          <div className="flex justify-between text-ink/70">
+            <span>
+              {formatInr(room.weekend_price_per_night)} x {quote.weekendNights} weekend night
+              {quote.weekendNights === 1 ? "" : "s"}
+            </span>
+            <span>
+              {formatInr(quote.weekendNights * room.weekend_price_per_night)}
+            </span>
+          </div>
+        )}
         <div className="flex justify-between border-t border-petrol-100 pt-2 font-semibold text-ink">
           <span>Total</span>
           <span>{formatInr(total)}</span>

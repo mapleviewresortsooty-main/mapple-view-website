@@ -14,7 +14,7 @@ declare global {
 }
 
 /** Bump when runMigration gains new required steps (indexes, columns, etc.). */
-const SCHEMA_VERSION = 7;
+const SCHEMA_VERSION = 8;
 
 // Lazy: Next.js's build-time "collecting page data" step imports every API
 // route module (including this one, transitively) just to inspect its
@@ -451,9 +451,15 @@ async function runMigration() {
     }
   }
 
-  // First room gets its real name and photo set — replaces the placeholder
-  // gallery entirely. Slug is only changed when free, so a manually-created
-  // room can't collide with it.
+  // Optional weekend rate — Friday and Saturday nights price at this when
+  // set; 0 means the room bills flat at price_per_night every day.
+  await sql.query(
+    "ALTER TABLE rooms ADD COLUMN IF NOT EXISTS weekend_price_per_night INTEGER NOT NULL DEFAULT 0"
+  );
+
+  // First room gets its real name, details and photo set — replaces the
+  // placeholder gallery entirely. Slug is only changed when free, so a
+  // manually-created room can't collide with it.
   const standardDoublePhotos = [
     "/room-photos/standard-double-1.jpg",
     "/room-photos/standard-double-2.jpg",
@@ -464,7 +470,7 @@ async function runMigration() {
   ];
   await sql.query(
     `UPDATE rooms SET
-       name = 'Standard Double',
+       name = 'Standard Double / Twin Room',
        slug = CASE
          WHEN EXISTS (
            SELECT 1 FROM rooms r2
@@ -472,9 +478,27 @@ async function runMigration() {
          ) THEN slug
          ELSE 'standard-double'
        END,
+       summary = 'Cosy ground-floor room (non-balcony) — a comfortable, great-value base for solo travellers and couples in Ooty.',
+       description = 'A cosy and comfortable room located on the ground floor, ideal for solo travellers and couples looking for an affordable stay in Ooty. Featuring a comfortable double bed, warm interiors and a peaceful atmosphere, the room offers all the essentials for a relaxing getaway. A great choice for guests who prefer comfort, convenience and value for money.',
+       price_per_night = 1799,
+       weekend_price_per_night = 2250,
+       max_guests = 2,
+       bed_type = 'Double Bed',
+       amenities = $2,
        images = $1
      WHERE id = (SELECT id FROM rooms ORDER BY sort_order LIMIT 1)`,
-    [JSON.stringify(standardDoublePhotos)]
+    [
+      JSON.stringify(standardDoublePhotos),
+      JSON.stringify([
+        "Geyser",
+        "Cupboard",
+        "Kettle",
+        "LED Android TV",
+        "Free Wi-Fi",
+        "Room Service",
+        "Toiletries",
+      ]),
+    ]
   );
 
   // Correct known-wrong placeholder addresses (e.g. Mussoorie) and align

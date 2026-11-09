@@ -24,6 +24,9 @@ export default function RoomForm({ room }: { room?: Room }) {
   const [summary, setSummary] = useState(room?.summary ?? "");
   const [description, setDescription] = useState(room?.description ?? "");
   const [price, setPrice] = useState(room?.price_per_night ?? 0);
+  const [weekendPrice, setWeekendPrice] = useState(
+    room?.weekend_price_per_night ?? 0
+  );
   const [maxGuests, setMaxGuests] = useState(room?.max_guests ?? 2);
   const [bedType, setBedType] = useState(room?.bed_type ?? "");
   const [sizeSqft, setSizeSqft] = useState(room?.size_sqft ?? 0);
@@ -69,6 +72,7 @@ export default function RoomForm({ room }: { room?: Room }) {
       summary,
       description,
       pricePerNight: price,
+      weekendPricePerNight: weekendPrice,
       maxGuests,
       bedType,
       sizeSqft,
@@ -158,6 +162,18 @@ export default function RoomForm({ room }: { room?: Room }) {
             min={0}
             value={price}
             onChange={(e) => setPrice(Number(e.target.value))}
+            className="mt-1 w-full rounded-lg border border-line px-3 py-2 text-sm focus:border-petrol-500 focus:outline-none"
+          />
+        </div>
+        <div>
+          <label className="text-xs font-medium text-ink/60">
+            Weekend ₹ <span className="text-ink/40">(Fri–Sat, 0 = same)</span>
+          </label>
+          <input
+            type="number"
+            min={0}
+            value={weekendPrice}
+            onChange={(e) => setWeekendPrice(Number(e.target.value))}
             className="mt-1 w-full rounded-lg border border-line px-3 py-2 text-sm focus:border-petrol-500 focus:outline-none"
           />
         </div>

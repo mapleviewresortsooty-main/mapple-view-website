@@ -53,6 +53,7 @@ export async function PUT(
     summary: d.summary,
     description: d.description,
     price_per_night: d.pricePerNight,
+    weekend_price_per_night: d.weekendPricePerNight,
     max_guests: d.maxGuests,
     bed_type: d.bedType,
     size_sqft: d.sizeSqft,

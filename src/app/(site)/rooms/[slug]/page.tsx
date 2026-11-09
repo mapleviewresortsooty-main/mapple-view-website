@@ -50,6 +50,11 @@ export default async function RoomDetailPage({
             {formatInr(room.price_per_night)}{" "}
             <span className="text-sm font-normal text-ink/60">/ night</span>
           </p>
+          {room.weekend_price_per_night > 0 && (
+            <p className="mt-1 text-sm text-ink/60">
+              {formatInr(room.weekend_price_per_night)} on Friday &amp; Saturday nights
+            </p>
+          )}
 
           <div className="mt-4 flex flex-wrap gap-4 text-sm text-ink/70">
             <span className="rounded-full bg-petrol-50 px-3 py-1">
