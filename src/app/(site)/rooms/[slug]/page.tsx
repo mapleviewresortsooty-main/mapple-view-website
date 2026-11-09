@@ -65,6 +65,11 @@ export default async function RoomDetailPage({
                 {room.bed_type}
               </span>
             )}
+            {room.amenities.includes("Ground Floor") && (
+              <span className="rounded-full bg-petrol-50 px-3 py-1">
+                Ground floor
+              </span>
+            )}
           </div>
 
           <p className="mt-6 whitespace-pre-line leading-relaxed text-ink/80">

@@ -14,7 +14,7 @@ declare global {
 }
 
 /** Bump when runMigration gains new required steps (indexes, columns, etc.). */
-const SCHEMA_VERSION = 10;
+const SCHEMA_VERSION = 11;
 
 // Lazy: Next.js's build-time "collecting page data" step imports every API
 // route module (including this one, transitively) just to inspect its
@@ -490,6 +490,7 @@ async function runMigration() {
     [
       JSON.stringify(standardDoublePhotos),
       JSON.stringify([
+        "Ground Floor",
         "Geyser",
         "Cupboard",
         "Kettle",
@@ -530,6 +531,7 @@ async function runMigration() {
     [
       JSON.stringify(deluxeQueenPhotos),
       JSON.stringify([
+        "Ground Floor",
         "Private Balcony with Mountain View",
         "Sunrise Views from Balcony",
         "Two Double Beds",
