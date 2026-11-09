@@ -14,7 +14,7 @@ declare global {
 }
 
 /** Bump when runMigration gains new required steps (indexes, columns, etc.). */
-const SCHEMA_VERSION = 14;
+const SCHEMA_VERSION = 15;
 
 // Lazy: Next.js's build-time "collecting page data" step imports every API
 // route module (including this one, transitively) just to inspect its
@@ -667,6 +667,51 @@ async function runMigration() {
         "Private Balcony with Mountain View",
         "Sunrise Views from Balcony",
         "Two Double Beds",
+        "Geyser",
+        "Cupboard",
+        "Kettle",
+        "LED Android TV",
+        "Free Wi-Fi",
+        "Room Service",
+        "Toiletries",
+      ]),
+    ]
+  );
+
+  // Sixth room gets its real listing — Deluxe Double Balcony Room, first
+  // floor with a private mountain-view balcony.
+  const deluxeDoubleBalconyPhotos = [
+    "/room-photos/deluxe-double-balcony-1.jpg",
+    "/room-photos/deluxe-double-balcony-2.jpg",
+    "/room-photos/deluxe-double-balcony-3.jpg",
+    "/room-photos/deluxe-double-balcony-4.jpg",
+  ];
+  await sql.query(
+    `UPDATE rooms SET
+       name = 'Deluxe Double Balcony Room',
+       slug = CASE
+         WHEN EXISTS (
+           SELECT 1 FROM rooms r2
+           WHERE r2.slug = 'deluxe-double-balcony-room' AND r2.id <> rooms.id
+         ) THEN slug
+         ELSE 'deluxe-double-balcony-room'
+       END,
+       summary = 'Cosy first-floor room with a private balcony overlooking the Nilgiris — made for couples.',
+       description = 'Experience a peaceful getaway in this cosy first-floor room, featuring a comfortable double bed and a private balcony overlooking the beautiful Nilgiri mountains. Enjoy the refreshing mountain breeze, scenic surroundings and stunning sunrise views right from your balcony.\n\nIdeal for couples and solo travellers, this room offers a comfortable and relaxing atmosphere, making it a perfect choice for a memorable stay in Ooty.',
+       price_per_night = 2200,
+       weekend_price_per_night = 2500,
+       max_guests = 2,
+       bed_type = 'Double Bed',
+       amenities = $2,
+       images = $1
+     WHERE id = (SELECT id FROM rooms ORDER BY sort_order LIMIT 1 OFFSET 5)`,
+    [
+      JSON.stringify(deluxeDoubleBalconyPhotos),
+      JSON.stringify([
+        "First Floor",
+        "Private Balcony with Mountain View",
+        "Sunrise Views from Balcony",
+        "Double Bed",
         "Geyser",
         "Cupboard",
         "Kettle",
