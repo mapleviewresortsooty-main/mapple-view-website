@@ -74,7 +74,7 @@ export default function RoomShowcase({
                 className="object-cover transition duration-700 group-hover:scale-105"
               />
               <div className="label-caps absolute left-0 top-0 bg-charcoal/85 px-3 py-1.5 text-stone backdrop-blur-sm">
-                {room.size_sqft > 0 ? `${room.size_sqft} sq ft` : `Up to ${room.max_guests} guests`}
+                Up to {room.max_guests} guests
               </div>
             </div>
             <div className="flex flex-1 flex-col justify-between p-5 sm:p-6">
@@ -177,14 +177,12 @@ export default function RoomShowcase({
 
                 <div className="mt-6 grid grid-cols-2 gap-4 bg-petrol-50 p-4">
                   <div>
-                    <span className="label-caps block text-ink-soft/60">Floor Area</span>
-                    <span className="font-display text-lg text-ink">
-                      {active.size_sqft > 0 ? `${active.size_sqft} sq ft` : "On request"}
-                    </span>
-                  </div>
-                  <div>
                     <span className="label-caps block text-ink-soft/60">Bed Configuration</span>
                     <span className="font-display text-lg text-ink">{active.bed_type || "On request"}</span>
+                  </div>
+                  <div>
+                    <span className="label-caps block text-ink-soft/60">Guests</span>
+                    <span className="font-display text-lg text-ink">Up to {active.max_guests}</span>
                   </div>
                 </div>
 
