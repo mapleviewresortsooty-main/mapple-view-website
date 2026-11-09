@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Room } from "@/lib/types";
-import { formatInr } from "@/lib/format";
 import { stockRoomImage } from "@/lib/stockImages";
 
 export default function RoomCard({
@@ -34,9 +33,6 @@ export default function RoomCard({
           sizes="(min-width: 768px) 33vw, 100vw"
           className="object-cover transition duration-500 group-hover:scale-105"
         />
-        <div className="label-caps absolute left-0 top-0 bg-charcoal/85 px-3 py-1.5 text-stone backdrop-blur-sm">
-          {formatInr(room.price_per_night)} / night
-        </div>
         {!available && (
           <div className="label-caps absolute right-0 top-0 bg-red-700/90 px-3 py-1.5 text-stone">
             {unavailableReason === "guest_limit" ? "Too few beds" : "Unavailable"}

@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import type { Room } from "@/lib/types";
-import { formatInr } from "@/lib/format";
 import Icon from "@/components/ui/Icon";
 import { stockRoomImage } from "@/lib/stockImages";
 
@@ -79,10 +78,7 @@ export default function RoomShowcase({
             </div>
             <div className="flex flex-1 flex-col justify-between p-5 sm:p-6">
               <div>
-                <span className="label-caps text-petrol-500">
-                  {formatInr(room.price_per_night)} / night
-                </span>
-                <h3 className="mt-2 font-display text-xl font-medium text-ink">{room.name}</h3>
+                <h3 className="font-display text-xl font-medium text-ink">{room.name}</h3>
                 <p className="mt-2 line-clamp-3 text-sm font-light leading-relaxed text-ink/70">
                   {room.summary}
                 </p>
@@ -202,10 +198,6 @@ export default function RoomShowcase({
               </div>
 
               <div className="mt-8 space-y-3 border-t border-line pt-6">
-                <span className="font-display text-lg text-petrol-600">
-                  {formatInr(active.price_per_night)}{" "}
-                  <span className="label-caps text-ink/50">/ night</span>
-                </span>
                 <Link
                   href={`/rooms/${active.slug}`}
                   className="label-caps flex w-full items-center justify-center bg-charcoal px-6 py-4 text-stone transition hover:bg-charcoal-light"

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { RoomModel } from "@/lib/models";
-import { formatInr } from "@/lib/format";
 import BookingForm from "@/components/site/BookingForm";
 import RoomGallery from "@/components/site/RoomGallery";
 import { stockRoomImage } from "@/lib/stockImages";
@@ -46,16 +45,6 @@ export default async function RoomDetailPage({
           <h1 className="mt-8 font-display text-3xl font-bold text-ink sm:text-4xl">
             {room.name}
           </h1>
-          <p className="mt-2 text-lg font-semibold text-petrol-600">
-            {formatInr(room.price_per_night)}{" "}
-            <span className="text-sm font-normal text-ink/60">/ night</span>
-          </p>
-          {room.weekend_price_per_night > 0 && (
-            <p className="mt-1 text-sm text-ink/60">
-              {formatInr(room.weekend_price_per_night)} on Friday &amp; Saturday nights
-            </p>
-          )}
-
           <div className="mt-4 flex flex-wrap gap-4 text-sm text-ink/70">
             <span className="rounded-full bg-petrol-50 px-3 py-1">
               Up to {room.max_guests} guests
