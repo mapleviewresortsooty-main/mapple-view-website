@@ -14,7 +14,7 @@ declare global {
 }
 
 /** Bump when runMigration gains new required steps (indexes, columns, etc.). */
-const SCHEMA_VERSION = 5;
+const SCHEMA_VERSION = 6;
 
 // Lazy: Next.js's build-time "collecting page data" step imports every API
 // route module (including this one, transitively) just to inspect its
@@ -450,6 +450,31 @@ async function runMigration() {
       );
     }
   }
+
+  // First room gets its real name and photo set — replaces the placeholder
+  // gallery entirely. Slug is only changed when free, so a manually-created
+  // room can't collide with it.
+  const standardDoublePhotos = [
+    "/room-photos/standard-double-1.jpg",
+    "/room-photos/standard-double-2.jpg",
+    "/room-photos/standard-double-3.jpg",
+    "/room-photos/standard-double-4.jpg",
+    "/room-photos/standard-double-5.jpg",
+  ];
+  await sql.query(
+    `UPDATE rooms SET
+       name = 'Standard Double',
+       slug = CASE
+         WHEN EXISTS (
+           SELECT 1 FROM rooms r2
+           WHERE r2.slug = 'standard-double' AND r2.id <> rooms.id
+         ) THEN slug
+         ELSE 'standard-double'
+       END,
+       images = $1
+     WHERE id = (SELECT id FROM rooms ORDER BY sort_order LIMIT 1)`,
+    [JSON.stringify(standardDoublePhotos)]
+  );
 
   // Correct known-wrong placeholder addresses (e.g. Mussoorie) and align
   // the seeded Lovedale address with the Google Maps listing.
