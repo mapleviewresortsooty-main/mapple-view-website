@@ -128,15 +128,18 @@ export default async function HomePage() {
             {settings.description}
           </p>
           <div className="mt-8 flex items-stretch gap-2.5 sm:mt-10 sm:gap-4">
+            {/* Solid fills on phones — petrol blends into warm photos and
+                thin outlines wash out. From sm up the subtler petrol /
+                translucent-outline pair returns. */}
             <a
               href="#rooms"
-              className="label-caps inline-flex min-h-12 flex-1 items-center justify-center bg-petrol-500 px-5 py-3.5 text-center text-stone transition hover:bg-petrol-600 sm:flex-none sm:px-7"
+              className="label-caps inline-flex min-h-12 flex-1 items-center justify-center bg-charcoal px-5 py-3.5 text-center text-stone transition hover:bg-charcoal-light sm:flex-none sm:bg-petrol-500 sm:px-7 sm:hover:bg-petrol-600"
             >
               Explore the Resort
             </a>
             <a
               href="#quick-booking"
-              className="label-caps inline-flex min-h-12 flex-1 items-center justify-center border border-stone/70 bg-stone/10 px-5 py-3.5 text-center text-stone backdrop-blur-[2px] transition hover:bg-stone hover:text-ink sm:flex-none sm:border-stone/80 sm:bg-charcoal/55 sm:px-7 sm:shadow-[0_1px_8px_rgba(0,0,0,0.35)] sm:backdrop-blur-sm"
+              className="label-caps inline-flex min-h-12 flex-1 items-center justify-center bg-stone px-5 py-3.5 text-center text-ink transition hover:bg-white sm:flex-none sm:border sm:border-stone/80 sm:bg-charcoal/55 sm:text-stone sm:shadow-[0_1px_8px_rgba(0,0,0,0.35)] sm:backdrop-blur-sm sm:hover:bg-stone sm:hover:text-ink sm:px-7"
             >
               Check Availability
             </a>
