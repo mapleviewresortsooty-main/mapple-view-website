@@ -101,7 +101,7 @@ export default async function HomePage() {
           priority
           quality={75}
           sizes="100vw"
-          className="object-cover object-[78%_28%] sm:object-center"
+          className="object-cover object-[45%_20%] sm:object-center"
         />
         {/* Lighter wash on mobile so the landscape reads; deepen from sm up for type */}
         <div className="absolute inset-0 bg-gradient-to-t from-charcoal/85 via-charcoal/25 to-charcoal/10 sm:from-charcoal sm:via-charcoal/55 sm:to-charcoal/40" />
