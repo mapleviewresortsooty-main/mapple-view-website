@@ -145,7 +145,6 @@ export const siteImagesUpdateSchema = z.object({
     "hero",
     "ethos",
     "timeline",
-    "panoramic",
     "gallery",
     "social",
     "cta",

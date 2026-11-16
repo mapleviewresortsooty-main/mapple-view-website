@@ -22,7 +22,6 @@ const RoomShowcase = dynamic(() => import("@/components/site/RoomShowcase"));
 // and its section block below.
 // const WakeUpHereTimeline = dynamic(() => import("@/components/site/WakeUpHereTimeline"));
 const ExploreOotyPanel = dynamic(() => import("@/components/site/ExploreOotyPanel"));
-const PanoramicDrag = dynamic(() => import("@/components/site/PanoramicDrag"));
 const FaqAccordion = dynamic(() => import("@/components/site/FaqAccordion"));
 
 const ethos = [
@@ -250,24 +249,13 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ========================= 05 · THE VIEW ========================= */}
-      <section className="order-3 mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20 md:order-none">
-        <SectionLabel index="05" eyebrow="Unfiltered Perspective" />
-        <h2 className="mt-5 max-w-xl font-display text-3xl font-normal text-ink sm:text-4xl">
-          Some views don&apos;t need a filter.
-        </h2>
-        <div className="mt-10">
-          <PanoramicDrag image={siteImages.panoramic[0]} />
-        </div>
-      </section>
-
       {/* "Curated Estate Frames" section removed — the photos now live on   */}
       {/* the /gallery page (top nav), grouped by Rooms and Shared Spaces.   */}
 
-      {/* ========================= 06 · FAQ ========================= */}
+      {/* ========================= 05 · FAQ ========================= */}
       <section className="order-3 bg-white py-16 sm:py-20 md:order-none">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <SectionLabel index="06" eyebrow="Good to Know" />
+          <SectionLabel index="05" eyebrow="Good to Know" />
           <h2 className="mt-5 font-display text-3xl font-normal text-ink sm:text-4xl">
             Frequently Asked Questions
           </h2>
@@ -277,10 +265,10 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ========================= 07 · GUEST MOMENTS ========================= */}
+      {/* ========================= 06 · GUEST MOMENTS ========================= */}
       {settings.testimonials.trim() && (
         <section className="order-3 mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20 md:order-none">
-          <SectionLabel index="07" eyebrow="Guest Moments" />
+          <SectionLabel index="06" eyebrow="Guest Moments" />
           <h2 className="mt-5 font-display text-3xl font-normal text-ink sm:text-4xl">
             In Their Own Words
           </h2>
@@ -290,10 +278,10 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* ========================= 08 · LOCATION ========================= */}
+      {/* ========================= 07 · LOCATION ========================= */}
       <section className="order-3 bg-petrol-50/50 py-16 sm:py-20 md:order-none">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <SectionLabel index="08" eyebrow="Arrival & Access" />
+          <SectionLabel index="07" eyebrow="Arrival & Access" />
           <h2 className="mt-5 font-display text-3xl font-normal text-ink sm:text-4xl">
             Find Mapple View Resort
           </h2>

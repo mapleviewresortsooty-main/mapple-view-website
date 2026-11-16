@@ -27,17 +27,10 @@ export const SITE_IMAGE_SECTIONS = [
     hint: "One photo per time slot (section 03).",
   },
   {
-    key: "panoramic",
-    label: "Panoramic view",
-    page: "Home",
-    max: 1,
-    hint: "The wide draggable panorama (section 05).",
-  },
-  {
     key: "gallery",
     label: "Gallery — “Mountain Views”",
-    page: "Home",
-    hint: "Extra frames in the gallery grid (section 06). Room photos there come from each room's own images.",
+    page: "Gallery",
+    hint: "Extra frames in the /gallery grid. Room photos there come from each room's own images.",
   },
   {
     key: "ooty",
@@ -85,7 +78,6 @@ export const SITE_IMAGE_DEFAULTS: Record<SiteImageKey, string[]> = {
     "/room-photos/living-4.jpg",
   ],
   timeline: [...stockImages.timeline],
-  panoramic: [stockImages.panoramic],
   gallery: [
     stockImages.gallery.sunbeams,
     stockImages.gallery.soakingTub,
