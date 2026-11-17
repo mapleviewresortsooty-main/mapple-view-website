@@ -64,6 +64,14 @@ export default async function Footer() {
       </div>
       <div className="label-caps relative flex flex-col items-center justify-between gap-2 border-t border-charcoal-light px-4 py-5 text-center text-stone/55 sm:flex-row sm:px-6">
         <span>© {year} {settings.resort_name}. All rights reserved.</span>
+        <a
+          href="https://amtechnexus.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:text-petrol-300"
+        >
+          Website by AM TechNexus
+        </a>
         <span>Lovedale, Ooty · Nilgiris, Tamil Nadu</span>
       </div>
     </footer>
