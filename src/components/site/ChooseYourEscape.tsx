@@ -75,7 +75,19 @@ export default function ChooseYourEscape() {
       <div className="mt-4 bg-petrol-50 p-4 sm:p-6 lg:p-10">
         <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-12">
           <div className="relative h-[220px] overflow-hidden sm:h-[280px] lg:col-span-6">
-            <Image src={current.image} alt={current.title} fill sizes="(min-width: 1024px) 50vw, 100vw" className="object-cover" />
+            {personas.map((p, i) => (
+              <Image
+                key={p.title}
+                src={p.image}
+                alt={i === active ? p.title : ""}
+                aria-hidden={i !== active}
+                fill
+                sizes="(min-width: 1024px) 50vw, 100vw"
+                className={`object-cover transition-opacity duration-500 motion-reduce:transition-none ${
+                  i === active ? "opacity-100" : "opacity-0"
+                }`}
+              />
+            ))}
           </div>
           <div className="space-y-4 lg:col-span-6">
             <span className="label-caps text-petrol-500">{current.badge}</span>

@@ -15,19 +15,22 @@ export default function RoomGallery({
   return (
     <div>
       <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl bg-petrol-100">
-        <div
-          key={active}
-          className="absolute inset-0 motion-safe:animate-[fade-in_0.4s_ease-out]"
-        >
+        {/* All photos stay mounted so thumbnail switches are instant —
+            only the first preloads; the rest fetch with the page. */}
+        {images.map((img, i) => (
           <Image
-            src={images[active]}
-            alt={name}
+            key={`${img}-${i}`}
+            src={img}
+            alt={i === active ? name : ""}
+            aria-hidden={i !== active}
             fill
             sizes="(min-width: 1024px) 60vw, 100vw"
-            className="object-cover"
-            priority
+            className={`object-cover transition-opacity duration-300 motion-reduce:transition-none ${
+              i === active ? "opacity-100" : "opacity-0"
+            }`}
+            priority={i === 0}
           />
-        </div>
+        ))}
       </div>
 
       {images.length > 1 && (

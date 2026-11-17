@@ -46,7 +46,6 @@ const moments = [
 export default function WakeUpHereTimeline({ images }: { images: string[] }) {
   const [active, setActive] = useState(0);
   const current = moments[active];
-  const image = images.length ? images[active % images.length] : undefined;
 
   return (
     <div>
@@ -67,9 +66,19 @@ export default function WakeUpHereTimeline({ images }: { images: string[] }) {
 
       <div className="mt-8 grid grid-cols-1 items-center gap-8 bg-white p-4 sm:p-6 lg:grid-cols-12 lg:p-10">
         <div className="relative h-[240px] overflow-hidden bg-petrol-100 sm:h-[320px] lg:col-span-7 lg:h-[420px]">
-          {image && (
-            <Image src={image} alt={current.title} fill sizes="(min-width: 1024px) 55vw, 100vw" className="object-cover" />
-          )}
+          {images.map((img, i) => (
+            <Image
+              key={`${img}-${i}`}
+              src={img}
+              alt={i === active % images.length ? current.title : ""}
+              aria-hidden={i !== active % images.length}
+              fill
+              sizes="(min-width: 1024px) 55vw, 100vw"
+              className={`object-cover transition-opacity duration-500 motion-reduce:transition-none ${
+                i === active % images.length ? "opacity-100" : "opacity-0"
+              }`}
+            />
+          ))}
         </div>
         <div className="space-y-4 lg:col-span-5">
           <div className="label-caps inline-flex items-center gap-2 bg-petrol-50 px-3 py-1.5 text-ink">

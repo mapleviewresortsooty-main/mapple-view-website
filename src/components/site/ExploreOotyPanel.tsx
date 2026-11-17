@@ -8,7 +8,6 @@ import { attractions } from "@/lib/ooty";
 export default function ExploreOotyPanel({ images }: { images: string[] }) {
   const [active, setActive] = useState(0);
   const current = attractions[active];
-  const image = images[active] ?? current.image;
 
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
@@ -62,18 +61,22 @@ export default function ExploreOotyPanel({ images }: { images: string[] }) {
         })}
       </div>
       <div className="relative min-h-[320px] overflow-hidden border border-stone/15 bg-charcoal-light sm:min-h-[400px] lg:col-span-7">
-        <div
-          key={active}
-          className="absolute inset-0 motion-safe:animate-[fade-in_0.6s_ease-out]"
-        >
+        {/* Every photo stays mounted so the browser fetches them all when the
+            section nears the viewport — switching attractions is then
+            instant instead of starting a fresh download per click. */}
+        {attractions.map((a, i) => (
           <Image
-            src={image}
-            alt={current.title}
+            key={a.title}
+            src={images[i] ?? a.image}
+            alt={i === active ? a.title : ""}
+            aria-hidden={i !== active}
             fill
             sizes="(min-width: 1024px) 55vw, 100vw"
-            className="object-cover"
+            className={`object-cover transition-opacity duration-500 motion-reduce:transition-none ${
+              i === active ? "opacity-100" : "opacity-0"
+            }`}
           />
-        </div>
+        ))}
         <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/35 to-transparent" />
         <div className="relative flex h-full min-h-[320px] flex-col justify-end p-6 sm:min-h-[400px] sm:p-8 lg:p-10">
           <span className="label-caps text-petrol-300">{current.proximity}</span>

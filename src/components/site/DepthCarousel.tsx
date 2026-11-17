@@ -118,24 +118,37 @@ export default function DepthCarousel({
   const reducedRef = useRef(false);
 
   const [active, setActive] = useState(0);
-  const [loaded, setLoaded] = useState(() => new Set<number>([0, 1]));
+  // Mount every card that's visible on first render (visibleCards + the
+  // front card) so the opening stack isn't empty placeholders; navigation
+  // keeps widening the window via notify().
+  const [loaded, setLoaded] = useState(
+    () =>
+      new Set<number>(
+        Array.from({ length: Math.min(count, visibleCards + 1) }, (_, i) => i)
+      )
+  );
 
-  onChangeRef.current = onChange;
-  cfgRef.current = {
-    count,
-    depth,
-    spread,
-    tilt,
-    tiltDirection,
-    visibleCards,
-    falloff,
-    blur,
-    duration,
-    ease,
-    loop,
-    cardWidth,
-    autoplayDelay,
-  };
+  // Latest props/callbacks live in refs so layout() and the GSAP handlers
+  // stay stable. Written in useLayoutEffect (declared before the layout()
+  // effect below) rather than during render, per the react-hooks rules.
+  useLayoutEffect(() => {
+    onChangeRef.current = onChange;
+    cfgRef.current = {
+      count,
+      depth,
+      spread,
+      tilt,
+      tiltDirection,
+      visibleCards,
+      falloff,
+      blur,
+      duration,
+      ease,
+      loop,
+      cardWidth,
+      autoplayDelay,
+    };
+  });
 
   const layout = useCallback((pos: number) => {
     const cfg = cfgRef.current;
