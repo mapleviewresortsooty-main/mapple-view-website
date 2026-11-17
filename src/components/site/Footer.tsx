@@ -70,7 +70,10 @@ export default async function Footer() {
           rel="noopener noreferrer"
           className="hover:text-petrol-300"
         >
-          Website by AM TechNexus
+          Website by{" "}
+          <span className="text-petrol-300 underline decoration-petrol-300/40 underline-offset-4">
+            AM TechNexus
+          </span>
         </a>
         <span>Lovedale, Ooty · Nilgiris, Tamil Nadu</span>
       </div>
