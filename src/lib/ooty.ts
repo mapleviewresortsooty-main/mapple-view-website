@@ -14,14 +14,14 @@ export const attractions = [
     title: "Ooty Lake",
     proximity: "A short drive from the resort",
     icon: "water",
-    image: stockImages.timeline[5],
+    image: "/attractions/ooty-lake.jpg",
     desc: "An artificial lake laid out in 1824, ringed by eucalyptus groves. Rent a boat or walk the shoreline path in the cool morning air.",
   },
   {
     title: "Doddabetta Peak",
     proximity: "A short drive from the resort",
     icon: "landscape",
-    image: stockImages.timeline[0],
+    image: "/attractions/doddabetta-peak.jpg",
     desc: "The highest point in the Nilgiris at about 2,637 m. On a clear day the telescope house at the summit gives sweeping views over the entire hill range.",
   },
   {
