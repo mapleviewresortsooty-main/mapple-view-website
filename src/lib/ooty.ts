@@ -1,6 +1,5 @@
 // Real, verifiable facts about Ooty and the Nilgiris, shown in the
 // homepage's interactive destination panel.
-import { stockImages } from "@/lib/stockImages";
 
 // Distances/travel times from Lovedale are intentionally omitted rather
 // than estimated — we don't have verified figures, and guessing numbers
@@ -28,42 +27,35 @@ export const attractions = [
     title: "Nilgiri Mountain Railway",
     proximity: "Boards at Ooty station",
     icon: "train",
-    image: stockImages.social[0],
+    image: "/attractions/nilgiri-railway.jpg",
     desc: "A UNESCO World Heritage mountain railway. The narrow-gauge \"toy train\" winds from Mettupalayam up through Coonoor to Ooty, one of the great train journeys in India.",
   },
   {
     title: "Government Botanical Garden",
     proximity: "A short drive from the resort",
     icon: "local_florist",
-    image: stockImages.gallery.sunbeams,
+    image: "/attractions/botanical-garden.jpg",
     desc: "Laid out in 1848 in the Italian style, terraced across a hillside with a fossilised tree trunk estimated at over 20 million years old.",
   },
   {
     title: "Tea Estates & Tea Museum",
     proximity: "Several within reach",
     icon: "emoji_food_beverage",
-    image: stockImages.dining.tea,
+    image: "/attractions/tea-estates.jpg",
     desc: "The Nilgiris are one of India's great tea-growing regions. Estate visits and tastings around Ooty and Coonoor show the leaf from bush to cup.",
   },
   {
     title: "Pykara Lake & Falls",
     proximity: "A longer drive, worth the trip",
     icon: "water_drop",
-    image: stockImages.timeline[2],
+    image: "/attractions/pykara-lake.jpg",
     desc: "A quieter spot for boating on the lake and a short walk to the falls, framed by shola forest.",
-  },
-  {
-    title: "St. Stephen's Church",
-    proximity: "A short drive from the resort",
-    icon: "church",
-    image: stockImages.gallery.facade,
-    desc: "Consecrated in 1830, one of the oldest churches in the Nilgiris, built with timber said to be salvaged from Tipu Sultan's palace in Seringapatam.",
   },
   {
     title: "Rose Garden",
     proximity: "A short drive from the resort",
     icon: "local_florist",
-    image: stockImages.timeline[3],
+    image: "/attractions/rose-garden.jpg",
     desc: "Terraced across a hillside near Elk Hill, one of the largest rose gardens in India with several thousand varieties.",
   },
 ];
